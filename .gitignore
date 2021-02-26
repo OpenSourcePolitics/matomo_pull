@@ -1,0 +1,4 @@
+*.sqbpro
+*.csv
+secrets.yml
+**__pycache__
