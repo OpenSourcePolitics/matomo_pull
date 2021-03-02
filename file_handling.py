@@ -12,12 +12,15 @@ def set_report_from_url(file_name, parameters):
     url = parameters['url']
     if parameters.get('date_range'):
         parsed_data = []
-        for day in get_date_range(parameters['start_date'], parameters['end_date']):
+        for day in get_date_range(
+                parameters['start_date'],
+                parameters['end_date']
+                ):
             url = parameters['url'].replace('date', f"date={day}")
             raw_data = json.loads(settings.http_get(url))
             current_parsed_data = parse_data(raw_data, day)
             parsed_data.extend(current_parsed_data)
-        with open(f"{file_name}.json", "w", encoding='utf-8') as f:
+        with open(parameters["file"], "w", encoding='utf-8') as f:
             json.dump(parsed_data, f)
     else:
         raw_data = settings.http_get(url)

@@ -10,11 +10,10 @@ def init():
 
 
 def set_database():
-    global connection, DATABASE_FILE
+    global connection, secrets
     with open('secrets.yml', 'r') as f:
         secrets = yaml.safe_load(f)
         connection = sqlite3.connect(secrets["api_settings"]["db_path"])
-        DATABASE_FILE = secrets["api_settings"]["db_path"]
 
 
 def set_http_manager():
@@ -28,7 +27,10 @@ def http_get(uri):
 
 
 def close():
-    files = ['visits.json', 'pages.json', 'referrers.json']
+    files = []
+    for element, values in secrets['requests'].items():
+        files.append(values['file'])
+    # files = ['visits.json', 'pages.json', 'referrers.json']
     for file in files:
         try:
             remove(file)
