@@ -1,30 +1,22 @@
 import settings
 import json
 from date_handling import get_date_range
-
-
-def write_file(file_name, raw_data):
-    with open(f"{file_name}.json", 'w', encoding='utf-8') as f:
-        f.write(raw_data)
+from url_handling import set_url
 
 
 def set_report_from_url(file_name, parameters):
-    url = parameters['url']
+    data = []
     if parameters.get('date_range'):
-        parsed_data = []
-        for day in get_date_range(
-                parameters['start_date'],
-                parameters['end_date']
-                ):
-            url = parameters['url'].replace('date', f"date={day}")
+        for day in get_date_range():
+            url = set_url(file_name, {'date': day})
             raw_data = json.loads(settings.http_get(url))
             current_parsed_data = parse_data(raw_data, day)
-            parsed_data.extend(current_parsed_data)
-        with open(parameters["file"], "w", encoding='utf-8') as f:
-            json.dump(parsed_data, f)
+            data.extend(current_parsed_data)
     else:
-        raw_data = settings.http_get(url)
-        write_file(file_name, raw_data)
+        data = json.loads(settings.http_get(set_url(file_name)))
+
+    with open(parameters["file"], "w", encoding='utf-8') as f:
+        json.dump(data, f)
 
 
 def set_files_for_sql_conversion(reports_map):
