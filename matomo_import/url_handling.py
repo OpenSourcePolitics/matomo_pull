@@ -16,3 +16,8 @@ def set_url(report_type, request_args={}):
         url += f"&{key}={value}"
 
     return url
+
+
+def http_get(uri):
+    r = s.http.request("GET", uri)
+    return r.data.decode('utf-8')
