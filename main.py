@@ -1,6 +1,8 @@
-import file_handling
-import sql_handling
-import settings
+from matomo_import import (
+    file_handling,
+    sql_handling,
+    settings
+)
 import yaml
 
 

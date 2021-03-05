@@ -1,7 +1,7 @@
-import settings
 import json
-from date_handling import get_date_range
-from url_handling import set_url
+from . import settings
+from .date_handling import get_date_range
+from .url_handling import set_url
 
 
 def set_report_from_url(file_name, parameters):

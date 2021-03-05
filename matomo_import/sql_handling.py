@@ -1,5 +1,5 @@
 import pandas as pd
-import settings
+from . import settings as s
 
 
 def convert_file_to_sql(file_name, params={}):
@@ -10,7 +10,7 @@ def convert_file_to_sql(file_name, params={}):
         df = df.rename(columns={"index": params.get("index_column_new_name")})
     df.to_sql(
         file_name.replace("_report", ""),
-        settings.connection,
+        s.connection,
         if_exists='replace'
     )
 
