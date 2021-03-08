@@ -20,7 +20,7 @@ secrets_for_tests = {
 }
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(autouse=True)
 def set_test_settings():
     global cursor
     with open(FILE_NAME, 'w') as f:
@@ -38,7 +38,7 @@ def set_test_settings():
 
 def test_data_object_corrupted():
     with pytest.raises(ValueError):
-        convert_data_object_to_sql('dummy_value', 'dummy_table')
+        convert_data_object_to_sql('dummy_value', {}, 'dummy_table')
 
 
 def test_data_object_is_correct(tmpdir):
