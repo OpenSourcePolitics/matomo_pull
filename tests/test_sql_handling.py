@@ -4,44 +4,19 @@ from matomo_import.sql_handling import (
     convert_data_object_to_sql,
     fill_database
 )
-import matomo_import.settings as settings
-import yaml
-import os
 
-FILE_NAME = 'dummy_secrets.yml'
-secrets_for_tests = {
-    'db_settings': {
-        'db_provider': 'sqlite3',
-        'db_name': 'dummy_database'
-    },
-    'requests': {
-        'dummy_table': {}
-    }
-}
+from .utils import (
+    settings_fixture,
+    settings
+)  # noqa
 
 
-@pytest.fixture(autouse=True)
-def set_test_settings():
-    global cursor
-    with open(FILE_NAME, 'w') as f:
-        yaml.dump(secrets_for_tests, f)
-
-    settings.init(FILE_NAME)
-
-    cursor = settings.connection.cursor()
-
-    yield
-
-    os.remove(FILE_NAME)
-    os.remove(secrets_for_tests['db_settings']['db_name'])
-
-
-def test_data_object_corrupted():
+def test_data_object_corrupted(settings_fixture):
     with pytest.raises(ValueError):
         convert_data_object_to_sql('dummy_value', {}, 'dummy_table')
 
 
-def test_data_object_is_correct(tmpdir):
+def test_data_object_is_correct(settings_fixture):
     dummy_table_name = 'dummy_table'
     dummy_object = [{"label": "value"}]
     convert_data_object_to_sql(
@@ -50,10 +25,11 @@ def test_data_object_is_correct(tmpdir):
         dummy_object
     )
 
+    cursor = settings.connection.cursor()
     assert cursor.execute(f"select * from {dummy_table_name}")
 
 
-def test_table_need_transpose():
+def test_table_need_transpose(settings_fixture):
     dummy_table_name = 'dummy_table'
     dummy_object = [{"label": "value"}]
     dummy_column_name = 'dummy_index'
@@ -68,13 +44,14 @@ def test_table_need_transpose():
         dummy_object
     )
 
+    cursor = settings.connection.cursor()
     assert cursor.execute(f"select * from {dummy_table_name}")
     assert cursor.execute(
         f"select {dummy_column_name} from {dummy_table_name}"
     )
 
 
-def test_fill_database():
+def test_fill_database(settings_fixture):
     data_objects = {
         'table1': [{'label1': 'value1'}],
         'table2': [{'label2': 'value2'}]
@@ -86,5 +63,6 @@ def test_fill_database():
 
     fill_database(data_objects)
 
+    cursor = settings.connection.cursor()
     for table_name in data_objects:
         assert cursor.execute(f"select * from {table_name}")
