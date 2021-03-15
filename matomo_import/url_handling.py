@@ -2,12 +2,18 @@ from . import settings as s
 
 
 def set_url(report_type, request_args={}):
-    assert s.secrets
+    assert (
+        s.secrets['api_settings'] and
+        s.secrets['api_settings']['url_parameters'] and
+        s.secrets['api_settings']['base_url'] and
+        s.secrets['requests'][report_type]['url_parameters']
+    )
+    # import pdb; pdb.set_trace()
     api_settings = s.secrets['api_settings']
     url_args = api_settings['url_parameters'].copy()
     url_args.update(s.secrets['requests'][report_type]['url_parameters'])
     url_args.update(request_args)
-    if not url_args.get('date'):
+    if not s.secrets['requests'][report_type].get('date_range'):
         url_args['date'] = (
             f"{api_settings['start_date']},{api_settings['end_date']}"
         )
@@ -18,6 +24,6 @@ def set_url(report_type, request_args={}):
     return url
 
 
-def http_get(uri):
-    r = s.http.request("GET", uri)
-    return r.data.decode('utf-8')
+def http_get(url):
+    response = s.http.request("GET", url).data.decode('utf-8')
+    return response

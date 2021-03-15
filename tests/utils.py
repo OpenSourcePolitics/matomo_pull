@@ -10,11 +10,18 @@ secrets_for_tests = {
         'db_name': 'dummy_database'
     },
     'requests': {
-        'dummy_table': {}
+        'dummy_table': {
+            'url_parameters': {
+                'method': 'an_api_method',
+                'parameter': 'a_parameter_value'
+            }
+        }
     },
     'api_settings': {
         'start_date': '2021-01-01',
         'end_date': '2021-01-31',
+        'url_parameters': {'dummy_arg': 'dummy_value'},
+        'base_url': 'example.com'
     }
 }
 
