@@ -11,6 +11,10 @@ secrets_for_tests = {
     },
     'requests': {
         'dummy_table': {}
+    },
+    'api_settings': {
+        'start_date': '2021-01-01',
+        'end_date': '2021-01-31',
     }
 }
 

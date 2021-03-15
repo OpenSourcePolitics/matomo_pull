@@ -5,18 +5,18 @@ from matomo_import.sql_handling import (
     fill_database
 )
 
-from .utils import (
+from .utils import (  # noqa
     settings_fixture,
     settings
-)  # noqa
+)
 
 
-def test_data_object_corrupted(settings_fixture):
+def test_data_object_corrupted():
     with pytest.raises(ValueError):
         convert_data_object_to_sql('dummy_value', {}, 'dummy_table')
 
 
-def test_data_object_is_correct(settings_fixture):
+def test_data_object_is_correct():
     dummy_table_name = 'dummy_table'
     dummy_object = [{"label": "value"}]
     convert_data_object_to_sql(
@@ -29,7 +29,7 @@ def test_data_object_is_correct(settings_fixture):
     assert cursor.execute(f"select * from {dummy_table_name}")
 
 
-def test_table_need_transpose(settings_fixture):
+def test_table_need_transpose():
     dummy_table_name = 'dummy_table'
     dummy_object = [{"label": "value"}]
     dummy_column_name = 'dummy_index'
@@ -51,7 +51,7 @@ def test_table_need_transpose(settings_fixture):
     )
 
 
-def test_fill_database(settings_fixture):
+def test_fill_database():
     data_objects = {
         'table1': [{'label1': 'value1'}],
         'table2': [{'label2': 'value2'}]
