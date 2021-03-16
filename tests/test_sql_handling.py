@@ -6,7 +6,8 @@ from matomo_import.sql_handling import (
 )
 
 from .utils import (  # noqa
-    settings_fixture,
+    settings_setup,
+    settings_init,
     settings
 )
 

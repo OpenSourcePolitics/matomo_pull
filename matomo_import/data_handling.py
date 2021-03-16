@@ -3,26 +3,26 @@ from .date_handling import get_date_range
 from .url_handling import set_url, http_get
 
 
-def set_report_from_url(file_name, parameters):
+def set_data_object_from_url(table_name, parameters={}):
     data = []
     if parameters.get('date_range'):
         for day in get_date_range():
-            url = set_url(file_name, {'date': day})
+            url = set_url(table_name, {'date': day})
             raw_data = json.loads(http_get(url))
             current_parsed_data = parse_data(raw_data, day)
             data.extend(current_parsed_data)
     else:
-        data = json.loads(http_get(set_url(file_name)))
+        data = json.loads(http_get(set_url(table_name)))
 
     return data
 
 
-def set_files_for_sql_conversion(reports_map):
+def set_data_objects_for_sql_conversion(reports_map):
     data_objects = {}
-    for report_name, report_parameters in reports_map.items():
-        data_objects[report_name] = set_report_from_url(
-            report_name,
-            report_parameters
+    for table_name, table_parameters in reports_map.items():
+        data_objects[table_name] = set_data_object_from_url(
+            table_name,
+            table_parameters
         )
     return data_objects
 

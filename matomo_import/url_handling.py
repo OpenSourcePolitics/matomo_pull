@@ -8,7 +8,6 @@ def set_url(report_type, request_args={}):
         s.secrets['api_settings']['base_url'] and
         s.secrets['requests'][report_type]['url_parameters']
     )
-    # import pdb; pdb.set_trace()
     api_settings = s.secrets['api_settings']
     url_args = api_settings['url_parameters'].copy()
     url_args.update(s.secrets['requests'][report_type]['url_parameters'])

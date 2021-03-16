@@ -1,8 +1,10 @@
 import pytest
 import matomo_import.date_handling as dh
-from datetime import datetime
+from datetime import datetime, timedelta
+
 from .utils import (  # noqa
-    settings_fixture,
+    settings_setup,
+    settings_init,
     settings
 )
 
@@ -27,14 +29,11 @@ def test_start_date_and_end_date_swaped():
 
 
 def test_correct_date_range():
-    settings.secrets['api_settings']['start_date'] = (
-        datetime.strptime('2021-01-01', '%Y-%m-%d').date()
-    )
-
+    wanted_delta = 30
     settings.secrets['api_settings']['end_date'] = (
-        datetime.strptime('2021-01-31', '%Y-%m-%d').date()
+        settings.secrets['api_settings']['start_date'] + timedelta(wanted_delta - 1)
     )
 
     date_range = dh.get_date_range()
 
-    assert len(date_range) == 31
+    assert len(date_range) == wanted_delta
