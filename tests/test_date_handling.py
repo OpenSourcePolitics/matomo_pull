@@ -31,7 +31,8 @@ def test_start_date_and_end_date_swaped():
 def test_correct_date_range():
     wanted_delta = 30
     settings.secrets['api_settings']['end_date'] = (
-        settings.secrets['api_settings']['start_date'] + timedelta(wanted_delta - 1)
+        settings.secrets['api_settings']['start_date']
+        + timedelta(wanted_delta - 1)
     )
 
     date_range = dh.get_date_range()

@@ -21,7 +21,11 @@ def test_set_url_wrong_secrets():
 
 def test_set_url_not_date_range(monkeypatch):
     dummy_table = list(settings.secrets['requests'].keys())[0]
-    monkeypatch.delitem(settings.secrets['requests'][dummy_table], 'date_range', False)
+    monkeypatch.delitem(
+        settings.secrets['requests'][dummy_table],
+        'date_range',
+        False
+    )
     url = uh.set_url(dummy_table)
 
     assert re.findall(r"date=.{10},.{10}", url)
@@ -36,11 +40,16 @@ def test_set_url_date_range_set():
 
 
 def test_return_consistent_url():
-    settings.secrets['api_settings']['base_url'] = 'https://example.com/index.php?'
+    settings.secrets['api_settings']['base_url'] = (
+        'https://example.com/index.php?'
+    )
     dummy_table = list(settings.secrets['requests'].keys())[0]
     url = uh.set_url(dummy_table)
 
-    assert re.match(r"https://((\w)+\.)+(\w)+/index\.php\?(&(\w)+=[a-zA-Z,-_.]+)+$", url)
+    assert re.match(
+        r"https://((\w)+\.)+(\w)+/index\.php\?(&(\w)+=[a-zA-Z,-_.]+)+$",
+        url
+    )
 
 
 def test_http_get_wrong_answer(monkeypatch):
