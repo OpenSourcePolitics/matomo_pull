@@ -1,4 +1,3 @@
-import json
 from .date_handling import get_date_range
 from .url_handling import set_url, http_get
 
@@ -8,11 +7,11 @@ def set_data_object_from_url(table_name, parameters={}):
     if parameters.get('date_range'):
         for day in get_date_range():
             url = set_url(table_name, {'date': day})
-            raw_data = json.loads(http_get(url))
+            raw_data = http_get(url)
             current_parsed_data = parse_data(raw_data, day)
             data.extend(current_parsed_data)
     else:
-        data = json.loads(http_get(set_url(table_name)))
+        data = http_get(set_url(table_name))
 
     return data
 

@@ -69,5 +69,5 @@ def test_http_get_right_answer(monkeypatch):
     monkeypatch.setattr(settings.http, 'request', dummy_correct_http_get)
 
     assert uh.http_get(url) == (
-        dummy_correct_http_get('GET', url).data.decode('utf-8')
+        uh.loads(dummy_correct_http_get('GET', url).data.decode('utf-8'))
     )
