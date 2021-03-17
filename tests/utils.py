@@ -32,7 +32,6 @@ dummy_table_parameters = secrets_for_tests['requests'][dummy_table_name]
 
 @pytest.fixture(scope="module", autouse=True)
 def settings_setup():
-    # import pdb; pdb.set_trace()
     with open(FILE_NAME, 'w') as f:
         yaml.dump(secrets_for_tests, f)
 
@@ -55,7 +54,9 @@ class DummyResponse:
 
 
 def dummy_correct_http_get(method, url):
-    return DummyResponse('[{"dummy_data":"value"}]'.encode('utf-8'))
+    return DummyResponse(
+        '[{"dummy_data":"value"}]'.encode('utf-8')
+    )
 
 
 def dummy_correct_http_get_subtabled(method, url):

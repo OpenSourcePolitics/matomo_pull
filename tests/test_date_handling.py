@@ -12,7 +12,7 @@ from .utils import (  # noqa
 def test_wrong_secrets_settings():
     settings.secrets['api_settings']['start_date'] = 'dummy value'
 
-    with pytest.raises(AssertionError):
+    with pytest.raises(TypeError):
         dh.get_date_range()
 
 
@@ -24,7 +24,7 @@ def test_start_date_and_end_date_swaped():
         datetime.strptime('2021-01-01', '%Y-%m-%d').date()
     )
 
-    with pytest.raises(AssertionError):
+    with pytest.raises(ValueError):
         dh.get_date_range()
 
 

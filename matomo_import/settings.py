@@ -20,7 +20,8 @@ def set_secrets(settings_file):
 
 
 def set_database():
-    assert secrets
+    if not secrets:
+        raise ValueError("Secrets not defined !")
     global connection
     connection = specify_database_provider(secrets['db_settings'])
 

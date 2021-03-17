@@ -6,14 +6,11 @@ def get_date_range():
     rolling_date = s.secrets['api_settings']['start_date']
     end_date = s.secrets['api_settings']['end_date']
 
-    assert_error_msg = "Date format is wrong"
-    assert isinstance(rolling_date, date), assert_error_msg
-    assert isinstance(end_date, date), assert_error_msg
+    if not isinstance(rolling_date, date) or not isinstance(end_date, date):
+        raise TypeError("Date format is wrong")
 
-    assert rolling_date <= end_date, f"""
-        Start date and end date may be swaped !\
-        Start date: {rolling_date},end_date: {end_date}
-    """
+    if end_date < rolling_date:
+        raise ValueError("Start date and end date may be swaped !")
 
     date_range = []
     while rolling_date <= end_date:
