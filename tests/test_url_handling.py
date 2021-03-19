@@ -8,7 +8,8 @@ from .utils import (  # noqa
     settings_init,
     settings,
     dummy_correct_http_get,
-    dummy_wrong_http_get
+    dummy_wrong_http_get,
+    dummy_wrong_url_http_get
 )
 
 
@@ -58,7 +59,12 @@ def test_http_get_wrong_answer(monkeypatch):
 
     monkeypatch.setattr(settings.http, 'request', dummy_wrong_http_get)
 
-    with pytest.raises(AttributeError):
+    with pytest.raises(ValueError):
+        uh.http_get(url)
+
+    monkeypatch.setattr(settings.http, 'request', dummy_wrong_url_http_get)
+
+    with pytest.raises(ValueError):
         uh.http_get(url)
 
 
@@ -69,5 +75,5 @@ def test_http_get_right_answer(monkeypatch):
     monkeypatch.setattr(settings.http, 'request', dummy_correct_http_get)
 
     assert uh.http_get(url) == (
-        uh.loads(dummy_correct_http_get('GET', url).data.decode('utf-8'))
+        uh.json.loads(dummy_correct_http_get('GET', url).data.decode('utf-8'))
     )

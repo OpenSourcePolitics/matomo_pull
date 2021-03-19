@@ -1,4 +1,4 @@
-from json import loads
+import json
 from . import settings as s
 
 
@@ -26,8 +26,12 @@ def set_url(report_type, request_args={}):
 
 
 def http_get(url):
-    response = loads(s.http.request("GET", url).data.decode('utf-8'))
+    try:
+        response = json.loads(s.http.request("GET", url).data.decode('utf-8'))
+    except Exception:
+        raise ValueError(f"Request returns unhandable data: {url}")
+
     if isinstance(response, dict) and response.get('result'):
-        raise BaseException(f"Error in API call : {response['message']}")
+        raise ValueError(f"Request returns error: {url}")
 
     return response

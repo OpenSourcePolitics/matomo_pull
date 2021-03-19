@@ -50,12 +50,12 @@ class DummyResponse:
     data = None
 
     def __init__(self, data):
-        self.data = data
+        self.data = data.encode('utf-8')
 
 
 def dummy_correct_http_get(method, url):
     return DummyResponse(
-        '[{"dummy_data":"value"}]'.encode('utf-8')
+        '[{"dummy_data":"value"}]'
     )
 
 
@@ -73,7 +73,16 @@ def dummy_correct_http_get_subtabled(method, url):
                     }
                 ]
             }
-        ]""".encode('utf-8')
+        ]"""
+    )
+
+
+def dummy_wrong_url_http_get(method, url):
+    return DummyResponse(
+        """{
+                "result": "error",
+                "error_info": "dummy informations"
+        }"""
     )
 
 

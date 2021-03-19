@@ -10,9 +10,23 @@ def test_initialize_secrets_not_correct(tmpdir):
         settings.init(dummy_file.strpath)
 
 
-def test_initialize_file_not_found():
+def test_initialize_file_not_found(monkeypatch):
     with pytest.raises(FileNotFoundError):
         settings.init('dummy_file.yml')
+
+
+def test_database_provider_not_working(tmpdir):
+    dummy_file = tmpdir.join('dummy_secrets.yml')
+    dummy_file.write("""
+        db_settings:
+            db_provider: dummy_provider
+            db_name: dummy_database
+        requests:
+            dummy_table: None
+    """)
+
+    with pytest.raises(NotImplementedError):
+        settings.init(dummy_file.strpath)
 
 
 def test_initialize_all_correct(tmpdir):

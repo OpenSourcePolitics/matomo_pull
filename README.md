@@ -4,7 +4,7 @@ The aim of the script provided is to pull data from a [Matomo](matomo.org) insta
 
 
 
-## Getting startd
+## Getting started
 ### Requirements
 - Python >= 3.8
 - Strongly recommended : a virtual environment manager (the one used for this project is [pew](https://github.com/berdario/pew))
