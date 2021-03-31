@@ -2,6 +2,15 @@ import pandas as pd
 from . import settings as s
 
 
+def fill_database(data_objects):
+    for table_name, data_object in data_objects.items():
+        convert_data_object_to_sql(
+            table_name,
+            s.secrets['requests'][table_name],
+            data_object
+        )
+
+
 def convert_data_object_to_sql(table_name, table_params, data_object):
     df = pd.DataFrame(data_object)
     if table_params.get("need_transpose"):
@@ -15,12 +24,3 @@ def convert_data_object_to_sql(table_name, table_params, data_object):
         s.connection,
         if_exists='replace'
     )
-
-
-def fill_database(data_objects):
-    for table_name, data_object in data_objects.items():
-        convert_data_object_to_sql(
-            table_name,
-            s.secrets['requests'][table_name],
-            data_object
-        )
