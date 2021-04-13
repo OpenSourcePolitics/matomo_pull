@@ -6,4 +6,4 @@ RUN pip3 install -r requirements.txt
 COPY . .
 EXPOSE 8080
 ENV PORT 8080
-CMD python3 server.py -l 0.0.0.0 
+CMD python3 server.py -l 0.0.0.0 -p ${PORT}
