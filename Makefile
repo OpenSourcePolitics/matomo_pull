@@ -2,7 +2,7 @@ PORT := 8080
 REGION := fr-par
 REGISTRY_ENDPOINT := rg.$(REGION).scw.cloud
 REGISTRY_NAMESPACE := matomo
-NAME := matomo_bis
+NAME := matomo
 IMAGE_NAME := $(REGISTRY_ENDPOINT)/$(REGISTRY_NAMESPACE)/$(NAME)
 VERSION := latest
 TAG := $(IMAGE_NAME):$(VERSION)
@@ -21,6 +21,7 @@ push:
 	docker push $(IMAGE_NAME)
 
 deploy:
+	@make build
 	@make login
 	@make push
 
