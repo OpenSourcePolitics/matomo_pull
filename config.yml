@@ -1,22 +1,19 @@
-# API connection settings
 api_settings:
-  base_url: "https://example.com/index.php?" # CHANGE ME
+  base_url: https://stats.data.gouv.fr/
   url_parameters:
     expanded: 1
     format: JSON
-    token_auth: anonymous # CHANGE ME IF PRIVATE INSTANCE
-    idSite: 0 # CHANGE ME
+    token_auth: anonymous
+    idSite: 150
     filter_limit: -1
     module: API
     period: day
-  start_date: 2021-01-01 # CHANGE FOR WANTED DATES FORMAT:YYYY-MM-DD
-  end_date: 2021-01-01 # CHANGE FOR WANTED DATES FORMAT:YYYY-MM-DD
-
-# Specify database provider (only sqlite3 available for now)
+  start_date: 2021-01-20
+  end_date: 2021-01-21
+# Specify database provider
 db_settings:
   db_provider: sqlite3
-  db_name: dummy_db_name
-
+  db_name: database
 # Specify requests to be made in order to set the database properly
 requests:
   visits:

@@ -18,7 +18,6 @@ def set_url(report_type, request_args={}):
     if not s.secrets['requests'][report_type].get('date_range'):
         url_args['date'] = (
             f"{api_settings['start_date']},{api_settings['end_date']}"
-            # f"{api_settings['start_date']},{os.getenv('END_DATE')}"
         )
     url = base_url + "index.php?"
     for key, value in url_args.items():

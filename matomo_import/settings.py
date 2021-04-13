@@ -2,7 +2,7 @@ import urllib3
 import yaml
 
 
-def init(settings_file='secrets.yml'):
+def init(settings_file='config.yml'):
     global http, secrets, connection
     http = set_http_manager()
     secrets = set_secrets(settings_file)
