@@ -9,7 +9,7 @@ TAG := $(IMAGE_NAME):$(VERSION)
 
 BASE_URL := 'https://stats.data.gouv.fr/'
 build:
-	docker build -t $(TAG) .
+	docker build -t $(TAG) . --compress
 
 start:
 	docker run -e PORT=$(PORT) -p $(PORT):$(PORT) ${IMAGE_NAME}
