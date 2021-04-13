@@ -12,7 +12,10 @@ build:
 	docker build -t $(TAG) . --compress
 
 start:
-	docker run -e PORT=$(PORT) -p $(PORT):$(PORT) ${IMAGE_NAME}
+	docker run -e PORT=$(PORT) -e BASE_URL=$(BASE_URL) -p $(PORT):$(PORT) ${IMAGE_NAME}
+
+stop:
+	docker ps --filter 'ancestor=$(IMAGE_NAME)' --format '{{.Names}}' | xargs docker stop
 
 login:
 	docker login $(REGISTRY_ENDPOINT)/$(REGISTRY_NAMESPACE) -u nologin -p $(SCW_SECRET_TOKEN)
@@ -29,3 +32,5 @@ run:
 	@make build
 	@make start
 
+test:
+	curl localhost:$(PORT)
