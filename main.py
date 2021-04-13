@@ -5,7 +5,7 @@ from matomo_import import (
 )
 
 
-def main():
+def exec():
     settings.init()
 
     data_objects = data_handling.set_data_objects_for_sql_conversion(
@@ -14,4 +14,4 @@ def main():
     sql_handling.fill_database(data_objects)
 
 
-main()
+exec()

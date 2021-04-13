@@ -1,4 +1,5 @@
 import json
+import os
 from . import settings as s
 
 
@@ -6,7 +7,7 @@ def set_url(report_type, request_args={}):
     try:
         api_settings = s.secrets['api_settings']
         base_url_parameters = api_settings['url_parameters']
-        base_url = api_settings['base_url']
+        base_url = os.getenv('BASE_URL') or api_settings['base_url']
         url_parameters = s.secrets['requests'][report_type]['url_parameters']
     except KeyError:
         raise KeyError("Error in settings definition")
@@ -17,8 +18,9 @@ def set_url(report_type, request_args={}):
     if not s.secrets['requests'][report_type].get('date_range'):
         url_args['date'] = (
             f"{api_settings['start_date']},{api_settings['end_date']}"
+            # f"{api_settings['start_date']},{os.getenv('END_DATE')}"
         )
-    url = base_url
+    url = base_url + "index.php?"
     for key, value in url_args.items():
         url += f"&{key}={value}"
 

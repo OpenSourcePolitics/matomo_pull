@@ -1,7 +1,9 @@
 import argparse
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
+import sqlite3
 import subprocess
+import os
 import main
 
 
@@ -17,22 +19,18 @@ class S(BaseHTTPRequestHandler): # change to meaningul name
     def do_GET(self):
         self._set_headers()
         main.exec()
-        proc = subprocess.run(
-            ['sqlite3', 'database', '.dump'],
-            stdout=subprocess.PIPE
-        )
+        data = ""
+        conn = sqlite3.connect("database")
+        for line in conn.iterdump():
+            data += f"{line}.\n"
         response = json.dumps(
-            {'results': proc.stdout.decode('utf-8')}
+            {'results': data}
         )
         response = bytes(response, 'utf-8')
         self.wfile.write(response)
 
-    def _json(self, message):
-        content = {'hello': message}
-        return content
 
-
-def run(server_class=HTTPServer, handler_class=S, addr="localhost", port=8000):
+def run(server_class=HTTPServer, handler_class=S, addr="0.0.0.0", port=8080):
     server_address = (addr, port)
     httpd = server_class(server_address, handler_class)
 
@@ -52,7 +50,7 @@ if __name__ == "__main__":
         "-p",
         "--port",
         type=int,
-        default=8000,
+        default=8080,
         help="Specify the port on which the server listens",
     )
     args = parser.parse_args()
