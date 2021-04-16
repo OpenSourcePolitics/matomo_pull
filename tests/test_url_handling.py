@@ -13,17 +13,17 @@ from .utils import (  # noqa
 )
 
 
-def test_set_url_wrong_secrets():
-    settings.secrets['requests'] = {'dummy_value': {}}
+def test_set_url_wrong_config():
+    settings.config['requests'] = {'dummy_value': {}}
 
     with pytest.raises(KeyError):
         uh.set_url('dummy_value')
 
 
 def test_set_url_not_date_range(monkeypatch):
-    dummy_table = list(settings.secrets['requests'].keys())[0]
+    dummy_table = list(settings.config['requests'].keys())[0]
     monkeypatch.delitem(
-        settings.secrets['requests'][dummy_table],
+        settings.config['requests'][dummy_table],
         'date_range',
         False
     )
@@ -33,18 +33,16 @@ def test_set_url_not_date_range(monkeypatch):
 
 
 def test_set_url_date_range_set():
-    dummy_table = list(settings.secrets['requests'].keys())[0]
-    settings.secrets['requests'][dummy_table]['date_range'] = True
+    dummy_table = list(settings.config['requests'].keys())[0]
+    settings.config['requests'][dummy_table]['date_range'] = True
 
     url = uh.set_url(dummy_table)
     assert not re.findall(r"date=.{10},.{10}", url)
 
 
-def test_return_consistent_url():
-    settings.secrets['api_settings']['base_url'] = (
-        'https://example.com/index.php?'
-    )
-    dummy_table = list(settings.secrets['requests'].keys())[0]
+def test_return_consistent_url(monkeypatch):
+    monkeypatch.setenv('BASE_URL', 'https://example.com/')
+    dummy_table = list(settings.config['requests'].keys())[0]
     url = uh.set_url(dummy_table)
 
     assert re.match(
@@ -54,7 +52,7 @@ def test_return_consistent_url():
 
 
 def test_http_get_wrong_answer(monkeypatch):
-    dummy_table = list(settings.secrets['requests'].keys())[0]
+    dummy_table = list(settings.config['requests'].keys())[0]
     url = uh.set_url(dummy_table)
 
     monkeypatch.setattr(settings.http, 'request', dummy_wrong_http_get)
@@ -69,7 +67,7 @@ def test_http_get_wrong_answer(monkeypatch):
 
 
 def test_http_get_right_answer(monkeypatch):
-    dummy_table = list(settings.secrets['requests'].keys())[0]
+    dummy_table = list(settings.config['requests'].keys())[0]
     url = uh.set_url(dummy_table)
 
     monkeypatch.setattr(settings.http, 'request', dummy_correct_http_get)
