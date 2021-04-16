@@ -21,10 +21,8 @@ def test_set_data_object_from_url_wrong_parameters():
 def test_set_data_object_from_url_with_date_range(monkeypatch):
     wanted_timedelta = 30
     dummy_table_parameters.update({'date_range': True})
-    settings.secrets['api_settings']['end_date'] = (
-        settings.secrets['api_settings']['start_date']
-        + timedelta(wanted_timedelta - 1)
-    )
+    settings.env['START_DATE'] = '2021-01-01'
+    monkeypatch.setenv('END_DATE', '2021-01-30')
 
     monkeypatch.setattr(settings.http, 'request', dummy_correct_http_get)
 
@@ -56,9 +54,7 @@ def test_parse_data_has_subtable(monkeypatch):
     monkeypatch.setattr(
         settings.http, 'request', dummy_correct_http_get_subtabled
     )
-    settings.secrets['api_settings']['end_date'] = (
-        settings.secrets['api_settings']['start_date']
-    )
+    monkeypatch.setenv('END_DATE', settings.env['START_DATE'])
 
     dummy_table_parameters.update({'date_range': True})
 
