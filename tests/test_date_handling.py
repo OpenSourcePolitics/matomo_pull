@@ -9,30 +9,26 @@ from .utils import (  # noqa
 )
 
 
-def test_wrong_secrets_settings():
-    settings.secrets['api_settings']['start_date'] = 'dummy value'
-
-    with pytest.raises(TypeError):
-        dh.get_date_range()
-
-
-def test_start_date_and_end_date_swaped():
-    settings.secrets['api_settings']['start_date'] = (
-        datetime.strptime('2021-02-01', '%Y-%m-%d').date()
-    )
-    settings.secrets['api_settings']['end_date'] = (
-        datetime.strptime('2021-01-01', '%Y-%m-%d').date()
-    )
+def test_wrong_config_settings(monkeypatch):
+    settings.env['START_DATE'] = 'dummy_value'
 
     with pytest.raises(ValueError):
         dh.get_date_range()
 
 
-def test_correct_date_range():
+def test_start_date_and_end_date_swaped(monkeypatch):
+    monkeypatch.setenv('END_DATE','2000-01-01')
+
+    with pytest.raises(ValueError):
+        dh.get_date_range()
+
+
+def test_correct_date_range(monkeypatch):
     wanted_delta = 30
-    settings.secrets['api_settings']['end_date'] = (
-        settings.secrets['api_settings']['start_date']
-        + timedelta(wanted_delta - 1)
+    start_date = dh.string_to_date(settings.env['START_DATE'])
+    monkeypatch.setenv(
+        'END_DATE',
+        start_date + timedelta(wanted_delta - 1)
     )
 
     date_range = dh.get_date_range()

@@ -32,11 +32,11 @@ def set_config(config_file):
 
 def set_env_variables():
     env = {
-        'base_url': os.getenv('BASE_URL'),
-        'db_name' : os.getenv('DB_NAME'),
-        'id_site' : os.getenv('ID_SITE'),
-        'start_date': os.getenv('START_DATE'),
-        'token_auth': os.getenv('TOKEN_AUTH')
+        'BASE_URL': os.getenv('BASE_URL'),
+        'DB_NAME' : os.getenv('DB_NAME'),
+        'ID_SITE' : os.getenv('ID_SITE'),
+        'START_DATE': os.getenv('START_DATE'),
+        'TOKEN_AUTH': os.getenv('TOKEN_AUTH')
     }
 
     if None in env.values():
