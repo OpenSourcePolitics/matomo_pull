@@ -22,7 +22,7 @@ def test_data_object_is_correct():
     dummy_object = [{"label": "value"}]
     convert_data_object_to_sql(
         dummy_table_name,
-        settings.secrets['requests'][dummy_table_name],
+        settings.config['requests'][dummy_table_name],
         dummy_object
     )
 
@@ -34,14 +34,14 @@ def test_table_need_transpose():
     dummy_table_name = 'dummy_table'
     dummy_object = [{"label": "value"}]
     dummy_column_name = 'dummy_index'
-    settings.secrets['requests']['dummy_table'] = {
+    settings.config['requests']['dummy_table'] = {
         'need_transpose': True,
         'index_column_new_name': dummy_column_name
     }
 
     convert_data_object_to_sql(
         dummy_table_name,
-        settings.secrets['requests'][dummy_table_name],
+        settings.config['requests'][dummy_table_name],
         dummy_object
     )
 
@@ -57,7 +57,7 @@ def test_fill_database():
         'table1': [{'label1': 'value1'}],
         'table2': [{'label2': 'value2'}]
     }
-    settings.secrets['requests'] = {
+    settings.config['requests'] = {
         'table1': {},
         'table2': {}
     }
