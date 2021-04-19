@@ -6,4 +6,4 @@ tests
 README.md
 license.txt
 Dockerfile
-secrets-example.yml
+config-example.yml
