@@ -1,6 +1,6 @@
 import pytest
 import matomo_import.date_handling as dh
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from .utils import (  # noqa
     settings_setup,
@@ -17,7 +17,7 @@ def test_wrong_config_settings(monkeypatch):
 
 
 def test_start_date_and_end_date_swaped(monkeypatch):
-    monkeypatch.setenv('END_DATE','2000-01-01')
+    monkeypatch.setenv('END_DATE', '2000-01-01')
 
     with pytest.raises(ValueError):
         dh.get_date_range()
