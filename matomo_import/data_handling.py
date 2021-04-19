@@ -15,7 +15,8 @@ def set_data_objects_for_sql_conversion(reports_map):
 def set_data_object_from_url(table_name, parameters={}):
     data = []
     if parameters.get('date_range'):
-        for day in get_date_range():
+        range = get_date_range()
+        for day in range:
             url = set_url(table_name, {'date': day})
             raw_data = http_get(url)
             current_parsed_data = parse_data(raw_data, day)

@@ -5,7 +5,9 @@ import os
 
 def get_date_range():
     rolling_date = string_to_date(s.env['START_DATE'])
-    end_date_string = os.getenv('END_DATE') or date.today().strftime("%Y-%m-%d")
+    end_date_string = (
+        os.getenv('END_DATE') or date.today().strftime("%Y-%m-%d")
+    )
     end_date = string_to_date(end_date_string)
 
     if not isinstance(rolling_date, date) or not isinstance(end_date, date):
