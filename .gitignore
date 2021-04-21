@@ -3,4 +3,3 @@ path
 .coverage
 **.pyc
 .env
-config.yml
