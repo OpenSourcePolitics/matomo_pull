@@ -20,10 +20,10 @@ config_for_tests = {
     }
 }
 env_for_tests = {
-    'BASE_URL': 'https://example.com',
+    'BASE_URL': 'https://example.com/',
     'DB_NAME': 'dummy_database',
     'ID_SITE': '1',
-    'START_DATE': '2021-01-01',
+    'START_DATE': '2021-01-04',
     'TOKEN_AUTH': 'dummy_token'
 }
 dummy_table_name = list(config_for_tests['requests'].keys())[0]
@@ -32,7 +32,7 @@ dummy_table_parameters = config_for_tests['requests'][dummy_table_name]
 
 @pytest.fixture(scope="module", autouse=True)
 def settings_setup():
-    for k,v in env_for_tests.items():
+    for k, v in env_for_tests.items():
         os.environ[k] = v
 
     with open(FILE_NAME, 'w') as f:

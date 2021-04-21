@@ -41,7 +41,6 @@ def test_set_url_date_range_set():
 
 
 def test_return_consistent_url(monkeypatch):
-    monkeypatch.setenv('BASE_URL', 'https://example.com/')
     dummy_table = list(settings.config['requests'].keys())[0]
     url = uh.set_url(dummy_table)
 

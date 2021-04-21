@@ -1,13 +1,12 @@
 import argparse
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
-import sqlite3
-import subprocess
 import os
+import sqlite3
 import main
 
 
-class S(BaseHTTPRequestHandler): # change to meaningul name
+class MainRequestHandler(BaseHTTPRequestHandler):  # change to meaningul name
     def _set_headers(self):
         self.send_response(200)
         self.send_header("Content-type", "application/json")
@@ -20,7 +19,7 @@ class S(BaseHTTPRequestHandler): # change to meaningul name
         self._set_headers()
         main.exec()
         data = ""
-        conn = sqlite3.connect("database")
+        conn = sqlite3.connect(os.environ['DB_NAME'])
         for line in conn.iterdump():
             data += f"{line}.\n"
         response = json.dumps(
@@ -30,7 +29,12 @@ class S(BaseHTTPRequestHandler): # change to meaningul name
         self.wfile.write(response)
 
 
-def run(server_class=HTTPServer, handler_class=S, addr="0.0.0.0", port=8080):
+def run(
+        server_class=HTTPServer,
+        handler_class=MainRequestHandler,
+        addr="0.0.0.0",
+        port=8080
+        ):
     server_address = (addr, port)
     httpd = server_class(server_address, handler_class)
 

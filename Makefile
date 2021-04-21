@@ -7,12 +7,13 @@ IMAGE_NAME := $(REGISTRY_ENDPOINT)/$(REGISTRY_NAMESPACE)/$(NAME)
 VERSION := latest
 TAG := $(IMAGE_NAME):$(VERSION)
 
-BASE_URL := 'https://stats.data.gouv.fr/'
 build:
 	docker build -t $(TAG) . --compress
 
 start:
-	docker run -e PORT=$(PORT) -e BASE_URL=$(BASE_URL) -p $(PORT):$(PORT) ${IMAGE_NAME}
+	docker run --env-file  .env\
+		-p $(PORT):$(PORT)\
+		${IMAGE_NAME}
 
 stop:
 	docker ps --filter 'ancestor=$(IMAGE_NAME)' --format '{{.Names}}' | xargs docker stop

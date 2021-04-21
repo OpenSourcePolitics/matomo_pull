@@ -24,12 +24,10 @@ def set_url(report_type, request_args={}):
 
 
 def set_basic_url_with_env_variables():
-    url = ''
-    env = os.environ
     url = (
-        f"{env['BASE_URL']}index.php?"
-        f"&token_auth={env['TOKEN_AUTH']}"
-        f"&idSite={env['ID_SITE']}"
+        f"{s.env['BASE_URL']}index.php?"
+        f"&token_auth={s.env['TOKEN_AUTH']}"
+        f"&idSite={s.env['ID_SITE']}"
     )
 
     return url
