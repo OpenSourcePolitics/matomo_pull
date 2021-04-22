@@ -4,11 +4,11 @@ import os
 import matomo_import.settings as settings
 from datetime import datetime
 
-FILE_NAME = 'dummy_secrets.yml'
-secrets_for_tests = {
-    'db_settings': {
-        'db_provider': 'sqlite3',
-        'db_name': 'dummy_database'
+FILE_NAME = 'dummy_config.yml'
+config_for_tests = {
+    'base_url_parameters': {
+        'start_date':  datetime.strptime('2021-01-01', '%Y-%m-%d').date(),
+        'end_date':  datetime.strptime('2021-01-02', '%Y-%m-%d').date(),
     },
     'requests': {
         'dummy_table': {
@@ -17,28 +17,31 @@ secrets_for_tests = {
                 'parameter': 'a_parameter_value'
             }
         }
-    },
-    'api_settings': {
-        'start_date':  datetime.strptime('2021-01-01', '%Y-%m-%d').date(),
-        'end_date':  datetime.strptime('2021-01-02', '%Y-%m-%d').date(),
-        'url_parameters': {'dummy_arg': 'dummy_value'},
-        'base_url': 'example.com'
     }
 }
-
-dummy_table_name = list(secrets_for_tests['requests'].keys())[0]
-dummy_table_parameters = secrets_for_tests['requests'][dummy_table_name]
+env_for_tests = {
+    'BASE_URL': 'https://example.com/',
+    'DB_NAME': 'dummy_database',
+    'ID_SITE': '1',
+    'START_DATE': '2021-01-04',
+    'TOKEN_AUTH': 'dummy_token'
+}
+dummy_table_name = list(config_for_tests['requests'].keys())[0]
+dummy_table_parameters = config_for_tests['requests'][dummy_table_name]
 
 
 @pytest.fixture(scope="module", autouse=True)
 def settings_setup():
+    for k, v in env_for_tests.items():
+        os.environ[k] = v
+
     with open(FILE_NAME, 'w') as f:
-        yaml.dump(secrets_for_tests, f)
+        yaml.dump(config_for_tests, f)
 
     yield
 
     os.remove(FILE_NAME)
-    os.remove(secrets_for_tests['db_settings']['db_name'])
+    os.remove(env_for_tests['DB_NAME'])
 
 
 @pytest.fixture(scope="function", autouse=True)

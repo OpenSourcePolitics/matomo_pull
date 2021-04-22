@@ -1,10 +1,14 @@
-from datetime import timedelta, date
+from datetime import datetime, timedelta, date
 from . import settings as s
+import os
 
 
 def get_date_range():
-    rolling_date = s.secrets['api_settings']['start_date']
-    end_date = s.secrets['api_settings']['end_date']
+    rolling_date = string_to_date(s.env['START_DATE'])
+    end_date_string = (
+        os.getenv('END_DATE') or date.today().strftime("%Y-%m-%d")
+    )
+    end_date = string_to_date(end_date_string)
 
     if not isinstance(rolling_date, date) or not isinstance(end_date, date):
         raise TypeError("Date format is wrong")
@@ -18,3 +22,7 @@ def get_date_range():
         rolling_date += timedelta(1)
 
     return date_range
+
+
+def string_to_date(date_string):
+    return datetime.strptime(date_string, '%Y-%m-%d').date()
