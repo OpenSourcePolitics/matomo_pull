@@ -1,15 +1,14 @@
 import argparse
 from http.server import HTTPServer, BaseHTTPRequestHandler
-import json
 import os
-import sqlite3
 import main
 
 
 class MainRequestHandler(BaseHTTPRequestHandler):  # change to meaningul name
     def _set_headers(self):
         self.send_response(200)
-        self.send_header("Content-type", "application/json")
+        self.send_header("Content-type", "application/x-sqlite3")
+        self.send_header("Content-Disposition", "attachment; filename=db")
         self.end_headers()
 
     def do_HEAD(self):
@@ -18,15 +17,8 @@ class MainRequestHandler(BaseHTTPRequestHandler):  # change to meaningul name
     def do_GET(self):
         self._set_headers()
         main.exec()
-        data = ""
-        conn = sqlite3.connect(os.environ['DB_NAME'])
-        for line in conn.iterdump():
-            data += f"{line}.\n"
-        response = json.dumps(
-            {'results': data}
-        )
-        response = bytes(response, 'utf-8')
-        self.wfile.write(response)
+        with open(os.environ['DB_NAME'], 'rb') as response:
+            self.wfile.write(response.read())
 
 
 def run(
