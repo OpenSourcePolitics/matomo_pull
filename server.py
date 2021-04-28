@@ -2,13 +2,17 @@ import argparse
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import os
 import main
+from matomo_import import settings
+from zipfile import ZipFile
+# import jwt
+from datetime import datetime, timedelta
 
 
 class MainRequestHandler(BaseHTTPRequestHandler):  # change to meaningul name
-    def _set_headers(self):
-        self.send_response(200)
-        self.send_header("Content-type", "application/x-sqlite3")
-        self.send_header("Content-Disposition", "attachment; filename=db")
+    def _set_headers(self, status_code=200):
+        self.send_response(status_code)
+        self.send_header("Content-type", "application/zip")
+        self.send_header("Content-Disposition", "attachment; filename=file.zip")
         self.end_headers()
 
     def do_HEAD(self):
@@ -16,8 +20,15 @@ class MainRequestHandler(BaseHTTPRequestHandler):  # change to meaningul name
 
     def do_GET(self):
         self._set_headers()
-        main.exec()
-        with open(os.environ['DB_NAME'], 'rb') as response:
+        settings.set_env_variables()
+        self._set_headers()
+        zip_name = f"{os.environ['DB_NAME']}.zip"
+
+        with ZipFile(zip_name,'w') as zip_file:
+            main.exec()
+            zip_file.write(os.environ['DB_NAME'])
+
+        with open(zip_name, 'rb') as response:
             self.wfile.write(response.read())
 
 
