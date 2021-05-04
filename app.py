@@ -1,8 +1,7 @@
 from flask import Flask, jsonify, request, send_file
 from functools import wraps
-from datetime import datetime, timedelta
+from datetime import datetime
 import jwt
-import json
 import os
 from zipfile import ZipFile
 
@@ -10,22 +9,20 @@ import main
 from matomo_import import settings
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret'
+app.config['SECRET_KEY'] = os.environ['JWT_SECRET_KEY']
 
 
 def check_for_token(func):
     @wraps(func)
     def wrapped(*args, **kwargs):
-        try:
-            request_args = json.loads(request.data.decode('utf-8'))
-        except Exception:
-            return jsonify({'message': 'Invalid passed data'})
+        token = request.args.get('token')
 
-        token = request_args.get('token')
         if not token:
             return jsonify({'message': 'Missing token'}), 403
         try:
-            jwt.decode(token, app.config['SECRET_KEY'], 'HS256')
+            data = jwt.decode(token, app.config['SECRET_KEY'], 'HS256')
+            if datetime.fromtimestamp(data['exp']) <= datetime.now():
+                return jsonify({'message':'Invalid token'}) 
         except Exception:
             return jsonify({'message': 'Invalid token'}), 403
         return func(*args, **kwargs)
@@ -46,25 +43,5 @@ def data():
         zip_name,
         "application/zip",
         as_attachment=True,
-        attachment_filename="banane.zip"
+        attachment_filename=f"{os.environ['DB_NAME']}.zip"
     )
-
-
-@app.route('/login', methods=['POST'])
-def login():
-    args = json.loads(request.data.decode('utf-8'))
-    if (
-        args.get('username') == os.environ['JWT_USERNAME'] and
-        args.get('password') == os.environ['JWT_PASSWORD']
-    ):
-        token = jwt.encode(
-            {
-                'user': request.args.get('user'),
-                'exp': datetime.now() + timedelta(minutes=30)
-            },
-            app.config['SECRET_KEY'],
-            'HS256'
-        )
-        return jsonify({'token': token})
-    else:
-        return jsonify({'message': 'Unable to verify'})
