@@ -6,4 +6,6 @@ tests
 README.md
 license.txt
 Dockerfile
+Makefile
 config-example.yml
+.env.example

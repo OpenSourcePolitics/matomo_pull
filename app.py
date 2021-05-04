@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, make_response, send_file
+from flask import Flask, jsonify, request, send_file
 from functools import wraps
 from datetime import datetime, timedelta
 import jwt
@@ -12,23 +12,25 @@ from matomo_import import settings
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
 
+
 def check_for_token(func):
     @wraps(func)
     def wrapped(*args, **kwargs):
         try:
             request_args = json.loads(request.data.decode('utf-8'))
-        except:
-            return jsonify({'message':'Invalid passed data'})
-        
+        except Exception:
+            return jsonify({'message': 'Invalid passed data'})
+
         token = request_args.get('token')
         if not token:
             return jsonify({'message': 'Missing token'}), 403
         try:
-            data = jwt.decode(token, app.config['SECRET_KEY'], 'HS256')
-        except :
+            jwt.decode(token, app.config['SECRET_KEY'], 'HS256')
+        except Exception:
             return jsonify({'message': 'Invalid token'}), 403
         return func(*args, **kwargs)
     return wrapped
+
 
 @app.route('/')
 @check_for_token
@@ -51,7 +53,10 @@ def data():
 @app.route('/login', methods=['POST'])
 def login():
     args = json.loads(request.data.decode('utf-8'))
-    if args.get('username') == 'user' and args.get('password') == 'password':
+    if (
+        args.get('username') == os.environ['JWT_USERNAME'] and
+        args.get('password') == os.environ['JWT_PASSWORD']
+    ):
         token = jwt.encode(
             {
                 'user': request.args.get('user'),
@@ -62,4 +67,4 @@ def login():
         )
         return jsonify({'token': token})
     else:
-        return jsonify({'message':'Unable to verify'})
+        return jsonify({'message': 'Unable to verify'})
