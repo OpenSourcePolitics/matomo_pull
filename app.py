@@ -33,15 +33,11 @@ def check_for_token(func):
 @check_for_token
 def data():
     settings.set_env_variables()
-    zip_name = f"{os.environ['DB_NAME']}.zip"
-
-    with ZipFile(zip_name, 'w') as zip_file:
-        main.exec()
-        zip_file.write(os.environ['DB_NAME'])
-
+    main.exec()
+    db_file = open(os.environ['DB_NAME'], 'rb')
     return send_file(
-        zip_name,
-        "application/zip",
+        db_file,
+        "application/xsqlite3",
         as_attachment=True,
-        attachment_filename=f"{os.environ['DB_NAME']}.zip"
+        attachment_filename=os.environ['DB_NAME']
     )
