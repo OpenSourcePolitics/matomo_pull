@@ -1,12 +1,12 @@
 from datetime import datetime, timedelta, date
 from . import settings as s
-import os
 
 
 def get_date_range():
-    rolling_date = string_to_date(s.env['START_DATE'])
+    rolling_date = string_to_date(s.remote_database_variables['start_date'])
     end_date_string = (
-        os.getenv('END_DATE') or date.today().strftime("%Y-%m-%d")
+        s.remote_database_variables.get('end_date')
+        or date.today().strftime("%Y-%m-%d")
     )
     end_date = string_to_date(end_date_string)
 

@@ -3,10 +3,8 @@ from functools import wraps
 from datetime import datetime
 import jwt
 import os
-from zipfile import ZipFile
 
 import main
-from matomo_import import settings
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ['JWT_SECRET_KEY']
@@ -22,22 +20,24 @@ def check_for_token(func):
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], 'HS256')
             if datetime.fromtimestamp(data['exp']) <= datetime.now():
-                return jsonify({'message':'Invalid token'}) 
+                return jsonify({'message': 'Invalid token'})
         except Exception:
             return jsonify({'message': 'Invalid token'}), 403
         return func(*args, **kwargs)
     return wrapped
 
 
-@app.route('/')
+@app.route('/', methods=['POST'])
 @check_for_token
-def data():
-    settings.set_env_variables()
-    main.exec()
-    db_file = open(os.environ['DB_NAME'], 'rb')
+def index():
+    data = request.get_json()
+    main.exec(data)
+
+    db_name = data['db_name']
+    db_file = open(db_name, 'rb')
     return send_file(
         db_file,
         "application/xsqlite3",
         as_attachment=True,
-        attachment_filename=os.environ['DB_NAME']
+        attachment_filename=db_name
     )

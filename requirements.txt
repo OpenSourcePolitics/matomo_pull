@@ -3,7 +3,6 @@ PyJWT~=2.0.1
 pandas~=1.2.3
 pytest-cov~=2.11.1
 pytest~=6.2.2
-python-dotenv~=0.17.0
 pyyaml~=5.4.1
 urllib3~=1.26.3
 flask~=1.1.2
