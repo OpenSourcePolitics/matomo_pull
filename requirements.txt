@@ -6,3 +6,4 @@ pytest~=6.2.2
 pyyaml~=5.4.1
 urllib3~=1.26.3
 flask~=1.1.2
+waitress~=2.0.0

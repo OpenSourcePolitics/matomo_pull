@@ -18,21 +18,41 @@ def check_for_token(func):
         if not token:
             return jsonify({'message': 'Missing token'}), 403
         try:
-            data = jwt.decode(token, app.config['SECRET_KEY'], 'HS256')
-            if datetime.fromtimestamp(data['exp']) <= datetime.now():
-                return jsonify({'message': 'Invalid token'})
-        except Exception:
+            jwt.decode(token, app.config['SECRET_KEY'], 'HS256')                
+        except jwt.exceptions.ExpiredSignatureError:
+            return jsonify({'message': 'Token expired'}), 403
+        except jwt.exceptions.InvalidSignatureError:
             return jsonify({'message': 'Invalid token'}), 403
+
         return func(*args, **kwargs)
     return wrapped
 
 
-@app.route('/', methods=['POST'])
-@check_for_token
-def index():
-    data = request.get_json()
-    main.exec(data)
+def check_data(func):
+    @wraps(func)
+    def wrapped(*args, **kwargs):
+        try:
+            data = [
+                request.args['base_url'],
+                request.args['id_site'],
+                request.args['start_date'],
+                request.args['token_auth']
+            ]
+        except Exception:
+            return jsonify({'message': 'Invalid data'}), 403
+        return func(*args, **kwargs)
+    return wrapped
+        
 
+@app.route('/')
+@check_for_token
+@check_data
+def index():
+    data = request.args
+    try:
+        main.exec(data)
+    except Exception:
+        return jsonify({'message':'Error executing script: recheck database variables'}), 403
     db_name = data['db_name']
     db_file = open(db_name, 'rb')
     return send_file(
@@ -41,3 +61,7 @@ def index():
         as_attachment=True,
         attachment_filename=db_name
     )
+
+if __name__ == "__main__":
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=os.environ["PORT"])
