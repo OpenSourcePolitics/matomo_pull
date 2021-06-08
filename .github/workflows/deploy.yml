@@ -27,5 +27,6 @@ jobs:
             -X POST \
             -H "X-Auth-Token: ${{ secrets.SCW_SECRET_TOKEN }}" \
             -d "{}" \
-            "https://api.scaleway.com/containers/${{ secrets.SCW_API_VERSION }}/regions/fr-par/containers/$CONTAINER_ID/deploy"
+            "https://api.scaleway.com/containers/${{ secrets.SCW_API_VERSION }}/regions/fr-par/containers/$CONTAINER_ID/deploy" \
+            | jq 'del(."environment_variables")'
 
