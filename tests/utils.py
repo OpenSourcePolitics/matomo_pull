@@ -19,12 +19,12 @@ config_for_tests = {
         }
     }
 }
-env_for_tests = {
-    'BASE_URL': 'https://example.com/',
-    'DB_NAME': 'dummy_database',
-    'ID_SITE': '1',
-    'START_DATE': '2021-01-04',
-    'TOKEN_AUTH': 'dummy_token'
+rdv_for_tests = {
+    'base_url': 'https://example.com/',
+    'db_name': 'dummy_database',
+    'id_site': '1',
+    'start_date': '2021-01-04',
+    'token_auth': 'dummy_token'
 }
 dummy_table_name = list(config_for_tests['requests'].keys())[0]
 dummy_table_parameters = config_for_tests['requests'][dummy_table_name]
@@ -32,7 +32,7 @@ dummy_table_parameters = config_for_tests['requests'][dummy_table_name]
 
 @pytest.fixture(scope="module", autouse=True)
 def settings_setup():
-    for k, v in env_for_tests.items():
+    for k, v in rdv_for_tests.items():
         os.environ[k] = v
 
     with open(FILE_NAME, 'w') as f:
@@ -41,12 +41,12 @@ def settings_setup():
     yield
 
     os.remove(FILE_NAME)
-    os.remove(env_for_tests['DB_NAME'])
+    os.remove(rdv_for_tests['db_name'])
 
 
 @pytest.fixture(scope="function", autouse=True)
 def settings_init():
-    settings.init(FILE_NAME)
+    settings.init(FILE_NAME, rdv_for_tests)
 
 
 class DummyResponse:

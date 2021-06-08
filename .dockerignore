@@ -6,4 +6,5 @@ tests
 README.md
 license.txt
 Dockerfile
-config-example.yml
+Makefile
+*_matomo

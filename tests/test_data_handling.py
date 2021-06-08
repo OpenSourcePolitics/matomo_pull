@@ -8,7 +8,8 @@ from .utils import (  # noqa
     dummy_correct_http_get,
     dummy_correct_http_get_subtabled,
     dummy_table_name,
-    dummy_table_parameters
+    dummy_table_parameters,
+    rdv_for_tests
 )
 
 
@@ -18,10 +19,19 @@ def test_set_data_object_from_url_wrong_parameters():
 
 
 def test_set_data_object_from_url_with_date_range(monkeypatch):
-    wanted_timedelta = 30
+    rdv_for_tests.update(
+        {
+            'start_date': '2021-01-01',
+            'end_date': '2021-01-30'
+        }
+    )
+    monkeypatch.setattr(
+        settings,
+        'remote_database_variables',
+        rdv_for_tests,
+        raising=False
+    )
     dummy_table_parameters.update({'date_range': True})
-    settings.env['START_DATE'] = '2021-01-01'
-    monkeypatch.setenv('END_DATE', '2021-01-30')
 
     monkeypatch.setattr(settings.http, 'request', dummy_correct_http_get)
 
@@ -30,7 +40,7 @@ def test_set_data_object_from_url_with_date_range(monkeypatch):
         dummy_table_parameters
     )
 
-    assert len(data) == wanted_timedelta
+    assert len(data) == 30
 
 
 def test_set_data_objects_for_sql_conversion_wrong_reports_map():
@@ -49,11 +59,18 @@ def test_set_data_objects_for_sql_conversion_correct_reports_map(monkeypatch):
     assert len(data_objects) == 1
 
 
-def test_parse_data_has_subtable(monkeypatch):
+def test_parse_range_data_has_subtable(monkeypatch):
     monkeypatch.setattr(
         settings.http, 'request', dummy_correct_http_get_subtabled
     )
-    monkeypatch.setenv('END_DATE', settings.env['START_DATE'])
+
+    rdv_for_tests['end_date'] = rdv_for_tests['start_date']
+    monkeypatch.setattr(
+        settings,
+        'remote_database_variables',
+        rdv_for_tests,
+        raising=False
+    )
 
     dummy_table_parameters.update({'date_range': True})
 

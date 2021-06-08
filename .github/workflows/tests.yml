@@ -28,4 +28,5 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test with pytest
       run: |
+        export JWT_SECRET_KEY="dummy-key"
         pytest --cov=matomo_import --cov-fail-under=90

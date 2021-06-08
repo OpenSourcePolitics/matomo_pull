@@ -1,7 +1,7 @@
 PORT := 8080
 REGION := fr-par
 REGISTRY_ENDPOINT := rg.$(REGION).scw.cloud
-REGISTRY_NAMESPACE := matomo
+REGISTRY_NAMESPACE := funcscwmtmtestxx0tvv6o
 NAME := matomo
 IMAGE_NAME := $(REGISTRY_ENDPOINT)/$(REGISTRY_NAMESPACE)/$(NAME)
 VERSION := latest
@@ -11,7 +11,7 @@ build:
 	docker build -t $(TAG) . --compress
 
 start:
-	docker run --env-file  .env\
+	docker run -e JWT_SECRET_KEY=$(JWT_SECRET_KEY)\
 		-p $(PORT):$(PORT)\
 		${IMAGE_NAME}
 
@@ -25,13 +25,17 @@ push:
 	docker push $(IMAGE_NAME)
 
 deploy:
-	@make build
 	@make login
+	@make build
 	@make push
 
 run: 
 	@make build
 	@make start
+
+restart:
+	@make stop
+	@make run
 
 test:
 	curl localhost:$(PORT)

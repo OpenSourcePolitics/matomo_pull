@@ -19,15 +19,15 @@ def set_data_object_from_url(table_name, parameters={}):
         for day in range:
             url = set_url(table_name, {'date': day})
             raw_data = http_get(url)
-            current_parsed_data = parse_data(raw_data, day)
+            current_parsed_data = parse_range_data(raw_data, day)
             data.extend(current_parsed_data)
     else:
         data = http_get(set_url(table_name))
 
-    return data
+    return remove_empty_values(data) if isinstance(data, dict) else data
 
 
-def parse_data(raw_data, day):
+def parse_range_data(raw_data, day):
     for entry in raw_data:
         entry['date'] = day
         if entry.get('subtable'):
@@ -37,3 +37,12 @@ def parse_data(raw_data, day):
             entry.pop('subtable')
 
     return raw_data
+
+
+def remove_empty_values(d):
+    dictionnary_updated = {}
+    for k, v in d.items():
+        if v:
+            dictionnary_updated[k] = v
+
+    return dictionnary_updated

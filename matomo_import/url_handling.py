@@ -1,6 +1,5 @@
 import json
 from datetime import date
-import os
 from . import settings as s
 
 
@@ -13,8 +12,9 @@ def set_url(report_type, request_args={}):
     url_args.update(url_parameters)
     url_args.update(request_args)
     if not s.config['requests'][report_type].get('date_range'):
-        start_date = os.environ['START_DATE']
-        end_date = os.getenv('END_DATE') or date.today().strftime("%Y-%m-%d")
+        start_date = s.remote_database_variables['start_date']
+        end_date = s.remote_database_variables.get('end_date') or \
+            date.today().strftime("%Y-%m-%d")
         url_args['date'] = f"{start_date},{end_date}"
 
     for key, value in url_args.items():
@@ -25,9 +25,9 @@ def set_url(report_type, request_args={}):
 
 def set_basic_url_with_env_variables():
     url = (
-        f"{s.env['BASE_URL']}index.php?"
-        f"&token_auth={s.env['TOKEN_AUTH']}"
-        f"&idSite={s.env['ID_SITE']}"
+        f"{s.remote_database_variables['base_url']}index.php?"
+        f"&token_auth={s.remote_database_variables['token_auth']}"
+        f"&idSite={s.remote_database_variables['id_site']}"
     )
 
     return url

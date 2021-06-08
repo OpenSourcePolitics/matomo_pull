@@ -1,6 +1,7 @@
 import pytest
 import sqlite3
 import matomo_import.settings as settings
+from tests.utils import rdv_for_tests
 
 
 def test_config_file_not_correct(tmpdir):
@@ -17,24 +18,30 @@ def test_config_file_not_found():
 
 
 def test_database_setup(monkeypatch):
-    monkeypatch.setenv('DB_NAME', 'dummy_database')
+    monkeypatch.setattr(
+        settings,
+        'remote_database_variables',
+        {'db_name': 'dummy_database'},
+        raising=False
+    )
 
     assert isinstance(
         settings.set_database_connection(),
         sqlite3.Connection
     )
 
-    monkeypatch.delenv('DB_NAME')
+    monkeypatch.delattr(
+        settings,
+        'remote_database_variables',
+    )
 
-    with pytest.raises(KeyError):
+    with pytest.raises(NameError):
         settings.set_database_connection()
 
 
-def test_env_variables_wrongly_set(tmpdir, monkeypatch):
-    monkeypatch.setenv('BASE_URL', '')
-
+def test_database_variables_wrongly_set(tmpdir, monkeypatch):
     with pytest.raises(KeyError):
-        settings.set_env_variables()
+        settings.set_remote_database_variables()
 
 
 def test_all_correct(tmpdir):
@@ -46,9 +53,9 @@ def test_all_correct(tmpdir):
             dummy_table: None
     """)
 
-    settings.init(dummy_file.strpath)
+    settings.init(dummy_file.strpath, rdv_for_tests)
 
     assert 'connection' in dir(settings)
     assert 'http' in dir(settings)
     assert 'config' in dir(settings)
-    assert 'env' in dir(settings)
+    assert 'remote_database_variables' in dir(settings)
