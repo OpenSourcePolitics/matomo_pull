@@ -12,9 +12,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Build & Push Image
         run: |
           IMAGE_NAME=${{ secrets.REGISTRY_ENDPOINT}}/${{ secrets.REGISTRY_NAMESPACE}}/${{ secrets.NAME }}:latest
           docker login ${{ secrets.REGISTRY_ENDPOINT }}/${{ secrets.REGISTRY_NAMESPACE }} -u nologin -p ${{ secrets.SCW_SECRET_TOKEN }}
           docker build --tag $IMAGE_NAME . --compress
           docker push $IMAGE_NAME
+
+      - name: Deploy container
+        run: |
+          CONTAINER_ID=$(sed -e 's/^"//' -e 's/"$//' <<<$(curl -X GET -H "X-Auth-Token: ${{ secrets.SCW_SECRET_TOKEN}}" "https://api.scaleway.com/containers/v1beta1/regions/fr-par/containers/" | jq -e '.containers[] | select(.name|test("${{ secrets.NAME }}"))'.id))
+          curl \
+            -X POST \
+            -H "X-Auth-Token: ${{ secrets.SCW_SECRET_TOKEN }}" \
+            -d "{}" \
+            "https://api.scaleway.com/containers/${{ secrets.SCW_API_VERSION }}/regions/fr-par/containers/$CONTAINER_ID/deploy"
+
