@@ -12,7 +12,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Build & Push Image
+        env:
+        with:
+          NAME: ${{ secrets.NAME }}
         run: |
           IMAGE_NAME=${{ secrets.REGISTRY_ENDPOINT}}/${{ secrets.REGISTRY_NAMESPACE}}/${{ secrets.NAME }}:latest
           docker login ${{ secrets.REGISTRY_ENDPOINT }}/${{ secrets.REGISTRY_NAMESPACE }} -u nologin -p ${{ secrets.SCW_SECRET_TOKEN }}
