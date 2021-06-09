@@ -24,7 +24,7 @@ def check_for_token(func):
         except jwt.exceptions.InvalidSignatureError:
             return jsonify({'message': 'Invalid token'}), 403
         except Exception as e:
-            return jsonify({'message':e})
+            return jsonify({'message':f"{type(e).__name__}:  {str(e)}"})
         return func(*args, **kwargs)
     return wrapped
 
@@ -49,6 +49,7 @@ def check_data(func):
 @check_for_token
 @check_data
 def index():
+    import pdb; pdb.set_trace()
     data = request.args
     try:
         main.exec(data)
