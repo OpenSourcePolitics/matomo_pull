@@ -23,7 +23,8 @@ def check_for_token(func):
             return jsonify({'message': 'Token expired'}), 403
         except jwt.exceptions.InvalidSignatureError:
             return jsonify({'message': 'Invalid token'}), 403
-
+        except Exception as e:
+            return jsonify({'message':e})
         return func(*args, **kwargs)
     return wrapped
 
