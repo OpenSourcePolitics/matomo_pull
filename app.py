@@ -18,7 +18,6 @@ def check_for_token(func):
             return jsonify({'message': 'Missing token'}), 403
         try:
             jwt.decode(token, app.config['SECRET_KEY'], 'HS256')
-
         except jwt.exceptions.ExpiredSignatureError:
             return jsonify({'message': 'Token expired'}), 403
         except jwt.exceptions.InvalidSignatureError:
@@ -50,6 +49,7 @@ def check_data(func):
 @check_for_token
 @check_data
 def index():
+    import pdb; pdb.set_trace()
     data = request.args
     try:
         main.exec(data)
