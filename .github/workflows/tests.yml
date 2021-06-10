@@ -30,4 +30,4 @@ jobs:
       env:
         JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
       run: |
-        pytest --cov=matomo_import --cov-fail-under=90
+        pytest --cov=. --cov-fail-under=90

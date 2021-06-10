@@ -1,14 +1,16 @@
 import pytest
 import yaml
 import os
+import jwt
 import matomo_import.settings as settings
-from datetime import datetime
+from datetime import datetime, timedelta
 
 FILE_NAME = 'dummy_config.yml'
+DUMMY_JWT_SECRET_KEY = 'dummy_secret'
 config_for_tests = {
     'base_url_parameters': {
-        'start_date':  datetime.strptime('2021-01-01', '%Y-%m-%d').date(),
-        'end_date':  datetime.strptime('2021-01-02', '%Y-%m-%d').date(),
+        'start_date': datetime.strptime('2021-01-01', '%Y-%m-%d').date(),
+        'end_date': datetime.strptime('2021-01-02', '%Y-%m-%d').date(),
     },
     'requests': {
         'dummy_table': {
@@ -94,3 +96,75 @@ def dummy_wrong_http_get(method, url):
         pass
 
     return DummyResponse()
+
+
+@pytest.fixture
+def client(scope="module", autouse=True):
+    from app import app
+    app.config['SECRET_KEY'] = DUMMY_JWT_SECRET_KEY
+    return app.test_client()
+
+
+@pytest.fixture
+def expired_token():
+    payload = {
+        'exp': datetime.now() - timedelta(days=7)
+    }
+    token = jwt.encode(
+        payload,
+        DUMMY_JWT_SECRET_KEY,
+    )
+    return token
+
+
+@pytest.fixture
+def invalid_token():
+    payload = {
+        'exp': datetime.now() + timedelta(minutes=30)
+    }
+    token = jwt.encode(
+        payload,
+        DUMMY_JWT_SECRET_KEY + DUMMY_JWT_SECRET_KEY,
+    )
+    return token
+
+
+@pytest.fixture
+def valid_token():
+    payload = {
+        'exp': datetime.now() + timedelta(minutes=30)
+    }
+    token = jwt.encode(
+        payload,
+        DUMMY_JWT_SECRET_KEY,
+    )
+    return token
+
+
+@pytest.fixture
+def invalid_url(valid_token):
+    return (
+        f"/?token={valid_token}"
+        "&site_id=dummy_site"
+        "&token_auth=dummy_auth"
+    )
+
+
+@pytest.fixture
+def valid_url(valid_token):
+    return (
+        f"/?token={valid_token}"
+        "&id_site=dummy_site"
+        "&token_auth=dummy_auth"
+        "&base_url=dummy_url"
+        "&start_date=dummy_date"
+        "&db_name=dummy_name"
+    )
+
+
+@pytest.fixture
+def set_sent_file():
+    with open('dummy_name', 'wb'):
+        yield
+
+    os.remove('dummy_name')
