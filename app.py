@@ -49,7 +49,6 @@ def check_data(func):
 @check_for_token
 @check_data
 def index():
-    import pdb; pdb.set_trace()
     data = request.args
     try:
         main.exec(data)
