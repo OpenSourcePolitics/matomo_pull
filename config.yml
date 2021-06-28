@@ -24,3 +24,11 @@ requests:
       method: Referrers.getReferrerType
       format_metrics: 1
     date_range: True
+  user_language:
+    url_parameters:
+      method: UserLanguage.getLanguage
+      period: range
+  downloads:
+    url_parameters:
+      method: Actions.getDownloads
+      period: range

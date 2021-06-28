@@ -43,8 +43,8 @@ def set_remote_database_variables(data={}):
     }
 
     if (
-        '' in remote_database_variables.values()
-        or not remote_database_variables.values()
+        '' in remote_database_variables.values() or not
+        remote_database_variables.values()
     ):
         raise KeyError(
             f"One or multiple configuration variables aren't set \n"
