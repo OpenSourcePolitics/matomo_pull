@@ -28,3 +28,7 @@ requests:
     url_parameters:
       method: UserLanguage.getLanguage
       period: range
+  downloads:
+    url_parameters:
+      method: Actions.getDownloads
+      period: range
