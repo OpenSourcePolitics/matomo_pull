@@ -31,7 +31,12 @@ The aim of the script provided is to pull data from a [Matomo](matomo.org) insta
 5. Gather the database file/ database informations created and use it for your data analysis
 
 ## Improve/contribute
-Any help to improve this script is welcome ! Do not hesitate to write issues/PRs to improve that script, see the contribute.md file.
+Any help to improve this script is welcome ! Do not hesitate to write issues/PRs to improve that script, see the CONTRIBUTE.adoc file.
+
+TL;DR:
+- write issues if you got problems or want to improve the project
+- do not hesitate to make PRs
+- validation workflow: be sure that test and syntax workflow works before asking for review
 
 ## Next steps
 

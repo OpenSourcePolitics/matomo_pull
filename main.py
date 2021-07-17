@@ -6,6 +6,7 @@ from matomo_import import (
 import os
 from dotenv import dotenv_values
 
+
 def exec(raw_database_variables=None):
     if os.path.exists('.env'):
         raw_database_variables = dotenv_values()
