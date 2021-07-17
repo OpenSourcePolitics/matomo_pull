@@ -1,0 +1,27 @@
+= How to contribute to matomo_import
+
+We're really glad you're reading this, because this project needs improvers like you !
+
+== Did you find a bug?
+
+* Go ahead and write the corresponding issue on GitHub.
+
+== Did you write a patch that fixes a bug?
+
+* Open a new GitHub pull request with the patch.
+* Ensure the PR description clearly describes the problem and solution.
+Include the relevant issue number if applicable.
+
+== Do you intend to add a new feature or change an existing one?
+
+* Suggest your change in a corresponding issue
+* Create the corresponding Pull Request.
+
+== Do you have questions about the source code?
+
+* Ask any question to [Dynnammo](mailto:baptiste@opensourcepolitics.eu)
+
+Thanks!
+:heart: :heart: :heart:
+
+The [Open Source Politics](opensourcepolitics.eu) team 
