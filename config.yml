@@ -31,4 +31,5 @@ requests:
   downloads:
     url_parameters:
       method: Actions.getDownloads
-      period: range
+      flat: 1
+    date_range: True
