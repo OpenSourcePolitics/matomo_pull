@@ -33,3 +33,23 @@ requests:
       method: Actions.getDownloads
       flat: 1
     date_range: True
+  entry_pages:
+    url_parameters:
+      method: Actions.getEntryPageUrls
+      flat: 1
+    date_range: True
+  exit_pages:
+    url_parameters:
+      method: Actions.getExitPageUrls
+      flat: 1
+    date_range: True
+  users_country:
+    url_parameters:
+      method: UserCountry.getCountry
+      format_metrics: 1
+    date_range: True
+  users_city:
+    url_parameters:
+      method: UserCountry.getCity
+      format_metrics: 1
+    date_range: True
