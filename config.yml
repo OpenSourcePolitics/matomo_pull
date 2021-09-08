@@ -53,3 +53,23 @@ requests:
       method: UserCountry.getCity
       format_metrics: 1
     date_range: True
+  visits_duration:
+    url_parameters:
+      method: VisitorInterest.getNumberOfVisitsPerPage
+      format_metrics: 1
+    date_range: True
+  visits_number_of_page_per_visit:
+    url_parameters:
+      method: VisitorInterest.getNumberOfVisitsPerPage
+      format_metrics: 1
+    date_range: True
+  visits_per_number_of_visits:
+    url_parameters:
+      method: VisitorInterest.getNumberOfVisitsByVisitCount
+      format_metrics: 1
+    date_range: True
+  visits_per_returning_time:
+    url_parameters:
+      method: VisitorInterest.getNumberOfVisitsByDaysSinceLast
+      format_metrics: 1
+      period: range
