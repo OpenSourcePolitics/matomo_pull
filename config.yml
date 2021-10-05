@@ -19,6 +19,11 @@ requests:
       method: Actions.getPageUrls
       flat: 1
     date_range: True
+  page_titles:
+    url_parameters:
+      method: Actions.getPageTitles
+      flat: 1
+    date_range: True
   referrers:
     url_parameters:
       method: Referrers.getReferrerType
@@ -33,3 +38,53 @@ requests:
       method: Actions.getDownloads
       flat: 1
     date_range: True
+  entry_pages:
+    url_parameters:
+      method: Actions.getEntryPageUrls
+      flat: 1
+    date_range: True
+  entry_page_titles:
+    url_parameters:
+      method: Actions.getEntryPageTitles
+      flat: 1
+    date_range: True
+  exit_pages:
+    url_parameters:
+      method: Actions.getExitPageUrls
+      flat: 1
+    date_range: True
+  exit_page_titles:
+    url_parameters:
+      method: Actions.getExitPageTitles
+      flat: 1
+    date_range: True
+  users_country:
+    url_parameters:
+      method: UserCountry.getCountry
+      format_metrics: 1
+    date_range: True
+  users_city:
+    url_parameters:
+      method: UserCountry.getCity
+      format_metrics: 1
+    date_range: True
+  visits_duration:
+    url_parameters:
+      method: VisitorInterest.getNumberOfVisitsPerPage
+      format_metrics: 1
+    date_range: True
+  visits_number_of_page_per_visit:
+    url_parameters:
+      method: VisitorInterest.getNumberOfVisitsPerPage
+      format_metrics: 1
+    date_range: True
+  visits_per_number_of_visits:
+    url_parameters:
+      method: VisitorInterest.getNumberOfVisitsByVisitCount
+      format_metrics: 1
+      period: range
+  visits_per_returning_time:
+    url_parameters:
+      method: VisitorInterest.getNumberOfVisitsByDaysSinceLast
+      format_metrics: 1
+      period: range
