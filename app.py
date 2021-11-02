@@ -56,14 +56,9 @@ def index():
         return jsonify(
             {'message': 'Error executing script: recheck database variables'}
         ), 403
-    db_name = data['db_name']
-    db_file = open(db_name, 'rb')
-    return send_file(
-        db_file,
-        "application/xsqlite3",
-        as_attachment=True,
-        attachment_filename=db_name
-    )
+    return jsonify(
+        {'message': 'Database successfully imported'}
+    ), 200
 
 
 if __name__ == "__main__":
