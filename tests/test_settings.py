@@ -1,6 +1,5 @@
 import pytest
-import sqlite3
-import matomo_import.settings as settings
+import matomo_pull.settings as settings
 from tests.utils import rdv_for_tests
 
 
@@ -18,25 +17,18 @@ def test_config_file_not_found():
 
 
 def test_database_setup(monkeypatch):
-    monkeypatch.setattr(
-        settings,
-        'remote_database_variables',
-        {'db_name': 'dummy_database'},
-        raising=False
-    )
-
     assert isinstance(
-        settings.set_database_connection(),
-        sqlite3.Connection
+        settings.set_database_connection(
+            vars={
+                'POSTGRES_USER':'postgres',
+                'POSTGRES_PASSWORD':'postgres',
+                'POSTGRES_HOST':'localhost',
+                'POSTGRES_PORT':5432,
+                'db_name':'postgres'
+            }
+        ),
+        settings.sqlalchemy.engine.base.Engine
     )
-
-    monkeypatch.delattr(
-        settings,
-        'remote_database_variables',
-    )
-
-    with pytest.raises(NameError):
-        settings.set_database_connection()
 
 
 def test_database_variables_wrongly_set(tmpdir, monkeypatch):
