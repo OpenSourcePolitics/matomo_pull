@@ -68,4 +68,3 @@ def test_all_clear(monkeypatch, client, valid_url, set_sent_file):
 
     response = client.get(valid_url)
     assert response.status_code == 200
-    assert response.content_type == "application/xsqlite3"

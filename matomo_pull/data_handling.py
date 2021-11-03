@@ -9,6 +9,7 @@ def set_data_objects_for_sql_conversion(reports_map):
             table_name,
             table_parameters
         )
+        print(f"{table_name} completed")
     return data_objects
 
 

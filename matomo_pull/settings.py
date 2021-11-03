@@ -1,5 +1,5 @@
 import urllib3
-import sqlite3
+import sqlalchemy
 import os
 import yaml
 
@@ -11,7 +11,7 @@ def init(data_file='config.yml', raw_database_variables={}):
     remote_database_variables = set_remote_database_variables(
         raw_database_variables
     )
-    connection = set_database_connection()
+    connection = set_database_connection(remote_database_variables)
 
 
 def set_http_manager():
@@ -38,8 +38,13 @@ def set_remote_database_variables(data={}):
         'db_name': data['db_name'],
         'id_site': data['id_site'],
         'start_date': data['start_date'],
+        'end_date': data['end_date'],
         'token_auth': data['token_auth'],
-        'JWT_SECRET_KEY': os.environ['JWT_SECRET_KEY']
+        'JWT_SECRET_KEY': os.environ['JWT_SECRET_KEY'],
+        'POSTGRES_USER': os.environ['POSTGRES_USER'],
+        'POSTGRES_PASSWORD': os.environ['POSTGRES_PASSWORD'],
+        'POSTGRES_HOST': os.environ['POSTGRES_HOST'],
+        'POSTGRES_PORT': os.environ['POSTGRES_PORT'],
     }
 
     if (
@@ -54,7 +59,18 @@ def set_remote_database_variables(data={}):
     return remote_database_variables
 
 
-def set_database_connection():
-    connection = sqlite3.connect(remote_database_variables['db_name'])
+def set_database_connection(vars=None):
+    try:
+        connection = sqlalchemy.create_engine(
+            f"postgresql://{vars['POSTGRES_USER']}:{vars['POSTGRES_PASSWORD']}"
+            f"@{vars['POSTGRES_HOST']}:{vars['POSTGRES_PORT']}"
+            f"/{vars['db_name']}"
+        )
+        connection.connect()
+    except Exception:
+        raise ValueError(
+            f"The Postgres database was wrongly configured."
+            f"Available variables are {vars}."
+        )
 
     return connection

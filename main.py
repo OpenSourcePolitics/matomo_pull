@@ -1,4 +1,4 @@
-from matomo_import import (
+from matomo_pull import (
     data_handling,
     sql_handling,
     settings

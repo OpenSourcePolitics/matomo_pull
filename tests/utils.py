@@ -2,7 +2,7 @@ import pytest
 import yaml
 import os
 import jwt
-import matomo_import.settings as settings
+import matomo_pull.settings as settings
 from datetime import datetime, timedelta
 
 FILE_NAME = 'dummy_config.yml'
@@ -23,9 +23,10 @@ config_for_tests = {
 }
 rdv_for_tests = {
     'base_url': 'https://example.com/',
-    'db_name': 'dummy_database',
+    'db_name': 'postgres',
     'id_site': '1',
     'start_date': '2021-01-04',
+    'end_date': '2021-02-04',
     'token_auth': 'dummy_token'
 }
 dummy_table_name = list(config_for_tests['requests'].keys())[0]
@@ -43,7 +44,6 @@ def settings_setup():
     yield
 
     os.remove(FILE_NAME)
-    os.remove(rdv_for_tests['db_name'])
 
 
 @pytest.fixture(scope="function", autouse=True)
