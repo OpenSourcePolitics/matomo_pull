@@ -14,6 +14,21 @@ jobs:
     strategy:
       matrix:
         python-version: [3.9]
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
     - uses: actions/checkout@v2
@@ -23,11 +38,17 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
+        apt-get update
+        apt-get install --yes postgresql-client
         python -m pip install --upgrade pip
         python -m pip install pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test with pytest
       env:
         JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+        POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+        POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
       run: |
-        pytest --cov=. --cov-fail-under=90
+        pytest

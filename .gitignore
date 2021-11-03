@@ -3,3 +3,5 @@ path
 .coverage
 **.pyc
 .env
+.secrets
+coverage.xml
