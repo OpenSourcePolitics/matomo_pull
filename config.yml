@@ -88,3 +88,8 @@ requests:
       method: VisitorInterest.getNumberOfVisitsByDaysSinceLast
       format_metrics: 1
       period: range
+  device_type:
+    url_parameters:
+      method: DevicesDetection.getType
+      format_metrics: 1
+    date_range: True

@@ -1,5 +1,5 @@
 import pytest
-import matomo_import.url_handling as uh
+import matomo_pull.url_handling as uh
 import re
 
 

@@ -1,6 +1,7 @@
 
 import pytest
-from matomo_import.sql_handling import (
+from sqlalchemy import text
+from matomo_pull.sql_handling import (
     convert_data_object_to_sql,
     fill_database
 )
@@ -26,8 +27,8 @@ def test_data_object_is_correct():
         dummy_object
     )
 
-    cursor = settings.connection.cursor()
-    assert cursor.execute(f"select * from {dummy_table_name}")
+    conn = settings.connection.connect()
+    assert conn.execute(text(f"select * from {dummy_table_name}"))
 
 
 def test_table_need_transpose():
@@ -45,10 +46,10 @@ def test_table_need_transpose():
         dummy_object
     )
 
-    cursor = settings.connection.cursor()
-    assert cursor.execute(f"select * from {dummy_table_name}")
-    assert cursor.execute(
-        f"select {dummy_column_name} from {dummy_table_name}"
+    conn = settings.connection.connect()
+    assert conn.execute(text(f"select * from {dummy_table_name}"))
+    assert conn.execute(
+        text(f"select {dummy_column_name} from {dummy_table_name}")
     )
 
 
@@ -64,6 +65,6 @@ def test_fill_database():
 
     fill_database(data_objects)
 
-    cursor = settings.connection.cursor()
+    conn = settings.connection.connect()
     for table_name in data_objects:
-        assert cursor.execute(f"select * from {table_name}")
+        assert conn.execute(text(f"select * from {table_name}"))
