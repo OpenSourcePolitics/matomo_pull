@@ -1,6 +1,7 @@
 import pytest
+import os
 import matomo_pull.settings as settings
-from tests.utils import rdv_for_tests
+from tests.utils import rdv_for_tests, settings_setup
 
 
 def test_config_file_not_correct(tmpdir):
@@ -16,24 +17,41 @@ def test_config_file_not_found():
         settings.init('dummy_file.yml')
 
 
-def test_database_setup(monkeypatch):
+def test_database_setup(settings_setup):
     assert isinstance(
         settings.set_database_connection(
             vars={
-                'POSTGRES_USER':'postgres',
-                'POSTGRES_PASSWORD':'postgres',
-                'POSTGRES_HOST':'localhost',
-                'POSTGRES_PORT':5432,
-                'db_name':'postgres'
+                'POSTGRES_USER':  os.environ['POSTGRES_USER'],
+                'POSTGRES_PASSWORD': os.environ['POSTGRES_PASSWORD'],
+                'POSTGRES_HOST': os.environ['POSTGRES_HOST'],
+                'POSTGRES_PORT': os.environ['POSTGRES_PORT'],
+                'db_name': os.environ['db_name']
             }
         ),
         settings.sqlalchemy.engine.base.Engine
     )
 
 
+def test_database_setup_wrong(settings_setup):
+    with pytest.raises(ValueError):
+        settings.set_database_connection(
+            vars={
+                'POSTGRES_USER':  os.environ['POSTGRES_USER'] + 'dummy',
+                'POSTGRES_PASSWORD': os.environ['POSTGRES_PASSWORD'],
+                'POSTGRES_HOST': os.environ['POSTGRES_HOST'],
+                'POSTGRES_PORT': os.environ['POSTGRES_PORT'],
+                'db_name': os.environ['db_name']
+            }
+        )
+
+
 def test_database_variables_wrongly_set(tmpdir, monkeypatch):
     with pytest.raises(KeyError):
         settings.set_remote_database_variables()
+
+def test_postgres_variables_wrongly_set():
+    with pytest.raises(ValueError):
+        settings.set_database_connection()
 
 
 def test_all_correct(tmpdir):

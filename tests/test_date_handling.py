@@ -1,5 +1,5 @@
 import pytest
-import matomo_import.date_handling as dh
+import matomo_pull.date_handling as dh
 # from datetime import timedelta
 
 from .utils import (  # noqa

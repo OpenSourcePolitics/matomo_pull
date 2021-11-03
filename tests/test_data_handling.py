@@ -1,5 +1,5 @@
 import pytest
-import matomo_import.data_handling as dh
+import matomo_pull.data_handling as dh
 
 from .utils import (  # noqa
     settings_setup,
