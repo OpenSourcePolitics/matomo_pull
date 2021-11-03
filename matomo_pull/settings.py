@@ -62,12 +62,15 @@ def set_remote_database_variables(data={}):
 def set_database_connection(vars=None):
     try:
         connection = sqlalchemy.create_engine(
-            f"postgresql://{vars['POSTGRES_USER']}:{vars['POSTGRES_PASSWORD']}@{vars['POSTGRES_HOST']}:{vars['POSTGRES_PORT']}/{vars['db_name']}"
+            f"postgresql://{vars['POSTGRES_USER']}:{vars['POSTGRES_PASSWORD']}"
+            f"@{vars['POSTGRES_HOST']}:{vars['POSTGRES_PORT']}"
+            f"/{vars['db_name']}"
         )
         connection.connect()
-    except:
+    except Exception:
         raise ValueError(
-            f"The Postgres database was wrongly configured. Available variables are {vars}."
+            f"The Postgres database was wrongly configured."
+            f"Available variables are {vars}."
         )
 
     return connection

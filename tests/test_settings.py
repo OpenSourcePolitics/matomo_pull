@@ -1,7 +1,7 @@
 import pytest
 import os
 import matomo_pull.settings as settings
-from tests.utils import rdv_for_tests, settings_setup
+from tests.utils import rdv_for_tests, settings_setup  # noqa
 
 
 def test_config_file_not_correct(tmpdir):
@@ -21,7 +21,7 @@ def test_database_setup(settings_setup):
     assert isinstance(
         settings.set_database_connection(
             vars={
-                'POSTGRES_USER':  os.environ['POSTGRES_USER'],
+                'POSTGRES_USER': os.environ['POSTGRES_USER'],
                 'POSTGRES_PASSWORD': os.environ['POSTGRES_PASSWORD'],
                 'POSTGRES_HOST': os.environ['POSTGRES_HOST'],
                 'POSTGRES_PORT': os.environ['POSTGRES_PORT'],
@@ -36,7 +36,7 @@ def test_database_setup_wrong(settings_setup):
     with pytest.raises(ValueError):
         settings.set_database_connection(
             vars={
-                'POSTGRES_USER':  os.environ['POSTGRES_USER'] + 'dummy',
+                'POSTGRES_USER': os.environ['POSTGRES_USER'] + 'dummy',
                 'POSTGRES_PASSWORD': os.environ['POSTGRES_PASSWORD'],
                 'POSTGRES_HOST': os.environ['POSTGRES_HOST'],
                 'POSTGRES_PORT': os.environ['POSTGRES_PORT'],
@@ -48,6 +48,7 @@ def test_database_setup_wrong(settings_setup):
 def test_database_variables_wrongly_set(tmpdir, monkeypatch):
     with pytest.raises(KeyError):
         settings.set_remote_database_variables()
+
 
 def test_postgres_variables_wrongly_set():
     with pytest.raises(ValueError):
