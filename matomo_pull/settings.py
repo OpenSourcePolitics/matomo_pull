@@ -41,10 +41,18 @@ def set_remote_database_variables(data={}):
         'end_date': data['end_date'],
         'token_auth': data['token_auth'],
         'JWT_SECRET_KEY': os.environ['JWT_SECRET_KEY'],
-        'POSTGRES_USER': os.environ.get('POSTGRES_USER') or data['POSTGRES_USER'],
-        'POSTGRES_PASSWORD': os.environ.get('POSTGRES_PASSWORD') or data['POSTGRES_PASSWORD'],
-        'POSTGRES_HOST': os.environ.get('POSTGRES_HOST') or data['POSTGRES_HOST'],
-        'POSTGRES_PORT': os.environ.get('POSTGRES_PORT') or data['POSTGRES_PORT'],
+        'POSTGRES_USER': (
+            os.environ.get('POSTGRES_USER') or data['POSTGRES_USER']
+        ),
+        'POSTGRES_PASSWORD': (
+            os.environ.get('POSTGRES_PASSWORD') or data['POSTGRES_PASSWORD']
+        ),
+        'POSTGRES_HOST': (
+            os.environ.get('POSTGRES_HOST') or data['POSTGRES_HOST']
+        ),
+        'POSTGRES_PORT': (
+            os.environ.get('POSTGRES_PORT') or data['POSTGRES_PORT']
+        )
     }
 
     if (
