@@ -19,8 +19,13 @@ def convert_data_object_to_sql(table_name, table_params, data_object):
         df = df.rename(
             columns={"index": table_params.get("index_column_new_name")}
         )
-    df.to_sql(
-        table_name,
-        s.connection,
-        if_exists='replace'
-    )
+    try:
+        df['date'] = df['date'].apply(pd.to_datetime)
+    except Exception:
+        print(f'no date field currently for table {table_name}')
+    finally:
+        df.to_sql(
+            table_name,
+            s.connection,
+            if_exists='replace'
+        )
