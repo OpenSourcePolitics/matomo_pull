@@ -16,4 +16,5 @@ RUN pip3 install -r requirements.txt
 COPY . .
 EXPOSE 8080
 ENV PORT 8080
-CMD gunicorn -w 4 --bind=0.0.0.0:${PORT} app:app --timeout=600
+ENV TIMEOUT 1200
+CMD gunicorn -w 4 --bind=0.0.0.0:${PORT} app:app --timeout=${TIMEOUT}
