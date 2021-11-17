@@ -36,7 +36,8 @@ def parse_range_data(raw_data, day):
                 sub_entry['sub_type'] = entry["label"]
                 raw_data.append(sub_entry)
             entry.pop('subtable')
-
+        if entry.get('goals'):
+            entry.pop('goals')
     return raw_data
 
 
