@@ -27,7 +27,11 @@ rdv_for_tests = {
     'id_site': '1',
     'start_date': '2021-01-04',
     'end_date': '2021-02-04',
-    'token_auth': 'dummy_token'
+    'token_auth': 'dummy_token',
+    'POSTGRES_USER': 'postgres',
+    'POSTGRES_PASSWORD': 'postgres',
+    'POSTGRES_HOST': 'localhost',
+    'POSTGRES_PORT': '5432'
 }
 dummy_table_name = list(config_for_tests['requests'].keys())[0]
 dummy_table_parameters = config_for_tests['requests'][dummy_table_name]
