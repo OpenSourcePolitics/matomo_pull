@@ -82,3 +82,32 @@ def set_database_connection(vars=None):
         )
 
     return connection
+
+
+def check_database():
+    try:
+        connection.execute("select * from visits")
+        is_database_created = True
+    except:
+        is_database_created = False
+    return is_database_created
+
+
+def update_start_date_regarding_database_state(remote_database_variables):
+    # import pdb; pdb.set_trace()
+    if is_database_created:
+        last_update = datetime.strptime(
+            connection.execute("select date from visits order by date desc limit 1").fetchall()[0][0],
+            '%Y-%m-%d'
+        ).date()
+    
+        if last_update == date.today() - timedelta(days = 1):
+            raise NotImplementedError("database already up to date")
+        else:
+            return last_update + timedelta(days = 1)
+    else:
+        remote_database_variables['start_date']
+
+
+def update_end_date_regarding_database_state(remote_database_variables):
+    return date.today() - timedelta(days = 1)
