@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from functools import wraps
+from matomo_pull.utils import DatabaseAlreadyUpdatedError
 import jwt
 import os
 
@@ -52,6 +53,10 @@ def index():
     data = request.args
     try:
         main.exec(data)
+    except DatabaseAlreadyUpdatedError:
+        return jsonify(
+            {'message': 'Database already updated'}
+        ), 200
     except Exception:
         return jsonify(
             {'message': 'Error executing script: recheck database variables'}

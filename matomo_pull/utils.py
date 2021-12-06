@@ -1,0 +1,3 @@
+class DatabaseAlreadyUpdatedError(Exception):
+    pass
+ 
