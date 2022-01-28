@@ -10,7 +10,7 @@ def init(data_file='config.yml', raw_database_variables={}):
     global http, config, mtm_vars, connection, raw_start_date
     http = set_http_manager()
     config = set_config(data_file)
-    connection = set_database_connection(raw_database_variables)
+    connection = set_database_connection()
     mtm_vars = set_mtm_vars(
         raw_database_variables
     )
@@ -63,7 +63,7 @@ def set_mtm_vars(data={}):
     return mtm_vars
 
 
-def set_database_connection(vars=None):
+def set_database_connection():
     try:
         env = os.environ
         connection = sqlalchemy.create_engine(
