@@ -1,6 +1,6 @@
 import main
 
-from .utils import (  # noqa
+from .conftest import (  # noqa
     client,
     expired_token,
     invalid_token,
