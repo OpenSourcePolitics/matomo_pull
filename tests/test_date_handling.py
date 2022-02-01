@@ -1,11 +1,7 @@
 import pytest
 import matomo_pull.date_handling as dh
 
-from .conftest import (
-    settings_setup,
-    settings_init,
-    settings
-)
+from .conftest import settings
 
 
 def test_wrong_database_variables_settings(monkeypatch):

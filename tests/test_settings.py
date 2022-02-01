@@ -3,8 +3,6 @@ import matomo_pull.settings as settings
 import matomo_pull.utils as utils
 from .conftest import (
     rdv_for_tests,
-    settings_setup,
-    settings_init,
     dummy_date
 )
 
@@ -55,7 +53,9 @@ def test_database_already_up_to_date(settings_setup, monkeypatch):
 
 def test_database_creation(settings_setup):
     conn = settings.set_database_connection()
-    conn.execute("create table visits(id int primary key not null, date date);")
+    conn.execute(
+        "create table visits(id int primary key not null, date date);"
+    )
     assert settings.is_database_created()
 
     conn.execute("drop table visits;")

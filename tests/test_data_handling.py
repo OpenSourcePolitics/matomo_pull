@@ -1,9 +1,7 @@
 import pytest
 import matomo_pull.data_handling as dh
 
-from .conftest import (  # noqa
-    settings_setup,
-    settings_init,
+from .conftest import (
     settings,
     dummy_correct_http_get,
     dummy_correct_http_get_subtabled,

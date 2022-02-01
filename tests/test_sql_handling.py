@@ -6,11 +6,7 @@ from matomo_pull.sql_handling import (
     fill_database
 )
 
-from .utils import (  # noqa
-    settings_setup,
-    settings_init,
-    settings
-)
+from .conftest import settings
 
 
 def test_data_object_corrupted():

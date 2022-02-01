@@ -3,9 +3,7 @@ import matomo_pull.url_handling as uh
 import re
 
 
-from .utils import (  # noqa
-    settings_setup,
-    settings_init,
+from .conftest import (
     settings,
     dummy_correct_http_get,
     dummy_wrong_http_get,

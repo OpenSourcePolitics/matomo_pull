@@ -67,6 +67,7 @@ def drop_database():
     for table_name in connection.table_names():
         connection.execute(f"drop table if exists {table_name};")
 
+
 class DummyResponse:
     data = None
 

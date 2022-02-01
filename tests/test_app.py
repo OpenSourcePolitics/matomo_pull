@@ -1,16 +1,5 @@
 import main
 
-from .conftest import (  # noqa
-    client,
-    expired_token,
-    invalid_token,
-    valid_token,
-    invalid_url,
-    valid_url,
-    set_sent_file,
-    DUMMY_JWT_SECRET_KEY
-)
-
 
 def test_no_token_passed(client):
     response = client.get("/")
