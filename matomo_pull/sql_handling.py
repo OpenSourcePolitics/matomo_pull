@@ -25,7 +25,10 @@ def convert_data_object_to_sql(table_name, table_params, data_object):
         print(f'no date field currently for table {table_name}')
     finally:
         if s.is_database_created(table_name):
-            res = s.connection.execute(f"select column_name from information_schema.columns where table_name='{table_name}'").fetchall()
+            res = s.connection.execute(
+                f"select column_name from information_schema.columns"
+                f" where table_name='{table_name}'"
+            ).fetchall()
             database_cols = [i[0] for i in res]
             database_cols = list(set(database_cols) & set(df.columns.tolist()))
             df = df[database_cols]
