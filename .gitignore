@@ -5,3 +5,4 @@ path
 .env
 .secrets
 coverage.xml
+.cache_ggshield
