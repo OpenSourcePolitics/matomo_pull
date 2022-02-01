@@ -1,7 +1,7 @@
 import pytest
 import matomo_pull.date_handling as dh
 
-from .utils import (  # noqa
+from .conftest import (
     settings_setup,
     settings_init,
     settings
@@ -11,7 +11,7 @@ from .utils import (  # noqa
 def test_wrong_database_variables_settings(monkeypatch):
     monkeypatch.setattr(
         settings,
-        'remote_database_variables',
+        'mtm_vars',
         {'start_date': 'dummy_value'},
         raising=False
     )
@@ -23,7 +23,7 @@ def test_wrong_database_variables_settings(monkeypatch):
 def test_start_date_and_end_date_swaped(monkeypatch):
     monkeypatch.setattr(
         settings,
-        'remote_database_variables',
+        'mtm_vars',
         {
             'end_date': '2000-01-01',
             'start_date': '2020-01-01'
@@ -38,7 +38,7 @@ def test_start_date_and_end_date_swaped(monkeypatch):
 def test_correct_date_range(monkeypatch):
     monkeypatch.setattr(
         settings,
-        'remote_database_variables',
+        'mtm_vars',
         {
             'start_date': '2020-01-01',
             'end_date': '2020-01-01'
