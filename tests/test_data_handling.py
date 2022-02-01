@@ -1,7 +1,7 @@
 import pytest
 import matomo_pull.data_handling as dh
 
-from .utils import (  # noqa
+from .conftest import (  # noqa
     settings_setup,
     settings_init,
     settings,
@@ -27,7 +27,7 @@ def test_set_data_object_from_url_with_date_range(monkeypatch):
     )
     monkeypatch.setattr(
         settings,
-        'remote_database_variables',
+        'mtm_vars',
         rdv_for_tests,
         raising=False
     )
@@ -67,7 +67,7 @@ def test_parse_range_data_has_subtable(monkeypatch):
     rdv_for_tests['end_date'] = rdv_for_tests['start_date']
     monkeypatch.setattr(
         settings,
-        'remote_database_variables',
+        'mtm_vars',
         rdv_for_tests,
         raising=False
     )
