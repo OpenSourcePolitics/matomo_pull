@@ -6,12 +6,12 @@ import matomo_pull.settings as settings
 from datetime import datetime, timedelta, date
 from sqlalchemy import create_engine
 
-FILE_NAME = 'dummy_config.yml'
+FILE_NAME = 'dummy_config_file.yml'
 DUMMY_JWT_SECRET_KEY = 'dummy_secret'
 config_for_tests = {
     'base_url_parameters': {
         'start_date': datetime.strptime('2021-01-01', '%Y-%m-%d').date(),
-        'end_date': datetime.strptime('2021-01-02', '%Y-%m-%d').date(),
+        'end_date': datetime.strptime('2022-01-02', '%Y-%m-%d').date(),
     },
     'requests': {
         'dummy_table': {
@@ -55,6 +55,8 @@ def settings_setup():
 def settings_init():
     drop_database()
     settings.init(FILE_NAME, rdv_for_tests)
+
+    yield
 
 
 def drop_database():
