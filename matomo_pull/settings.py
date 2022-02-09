@@ -10,7 +10,7 @@ def init(data_file='config.yml', raw_database_variables={}):
     global http, config, mtm_vars, connection, raw_start_date
     http = set_http_manager()
     config = set_config(data_file)
-    connection = set_database_connection()
+    connection = set_database_connection(raw_database_variables['db_name'])
     mtm_vars = set_mtm_vars(
         raw_database_variables
     )
@@ -63,13 +63,13 @@ def set_mtm_vars(data={}):
     return mtm_vars
 
 
-def set_database_connection():
+def set_database_connection(db_name):
     try:
         env = os.environ
         connection = sqlalchemy.create_engine(
             f"postgresql://{env['POSTGRES_USER']}:{env['POSTGRES_PASSWORD']}"
             f"@{env['POSTGRES_HOST']}:{env['POSTGRES_PORT']}"
-            f"/{env['db_name']}"
+            f"/{db_name}"
         )
         connection.connect()
     except Exception:
