@@ -3,15 +3,8 @@ from . import settings as s
 
 
 def get_date_range():
-    rolling_date = string_to_date(s.remote_database_variables['start_date'])
-    end_date_string = (
-        s.remote_database_variables.get('end_date') or  # noqa
-        date.today().strftime("%Y-%m-%d")
-    )
-    end_date = string_to_date(end_date_string)
-
-    if not isinstance(rolling_date, date) or not isinstance(end_date, date):
-        raise TypeError("Date format is wrong")
+    rolling_date = convert_to_date(s.mtm_vars['start_date'])
+    end_date = convert_to_date(s.mtm_vars['end_date'])
 
     if end_date < rolling_date:
         raise ValueError("Start date and end date may be swaped !")
@@ -24,5 +17,10 @@ def get_date_range():
     return date_range
 
 
-def string_to_date(date_string):
-    return datetime.strptime(date_string, '%Y-%m-%d').date()
+def convert_to_date(date_var):
+    if isinstance(date_var, str):
+        return datetime.strptime(date_var, '%Y-%m-%d').date()
+    elif isinstance(date_var, date):
+        return date_var
+    else:
+        raise TypeError("Date format is wrong")

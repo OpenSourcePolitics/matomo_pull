@@ -1,0 +1,14 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+- repo: https://gitlab.com/pycqa/flake8
+  rev: 3.9.2
+  hooks:
+    - id: flake8
+
+- repo: https://github.com/gitguardian/ggshield
+  rev: main
+  hooks:
+    - id: ggshield
+      language_version: python3
+      stages: [commit]

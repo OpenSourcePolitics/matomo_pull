@@ -2,16 +2,22 @@ import urllib3
 import sqlalchemy
 import os
 import yaml
+from datetime import datetime, timedelta, date
+from .utils import DatabaseAlreadyUpdatedError
 
 
 def init(data_file='config.yml', raw_database_variables={}):
-    global http, config, remote_database_variables, connection
+    global http, config, mtm_vars, connection, raw_start_date
     http = set_http_manager()
     config = set_config(data_file)
-    remote_database_variables = set_remote_database_variables(
+    connection = set_database_connection(raw_database_variables['db_name'])
+    mtm_vars = set_mtm_vars(
         raw_database_variables
     )
-    connection = set_database_connection(remote_database_variables)
+    raw_start_date = mtm_vars['start_date']
+    mtm_vars = check_mtm_vars(
+        mtm_vars
+    )
 
 
 def set_http_manager():
@@ -32,13 +38,13 @@ def set_config(config_file='config.yml'):
     return config
 
 
-def set_remote_database_variables(data={}):
-    remote_database_variables = {
+def set_mtm_vars(data={}):
+    mtm_vars = {
         'base_url': data['base_url'],
         'db_name': data['db_name'],
         'id_site': data['id_site'],
-        'start_date': data['start_date'],
-        'end_date': data['end_date'],
+        'start_date': datetime.strptime(data['start_date'], '%Y-%m-%d').date(),
+        'end_date': datetime.strptime(data['end_date'], '%Y-%m-%d').date(),
         'token_auth': data['token_auth'],
         'JWT_SECRET_KEY': os.environ['JWT_SECRET_KEY'],
         'POSTGRES_USER': (
@@ -54,31 +60,82 @@ def set_remote_database_variables(data={}):
             os.environ.get('POSTGRES_PORT') or data['POSTGRES_PORT']
         )
     }
-
-    if (
-        '' in remote_database_variables.values() or not
-        remote_database_variables.values()
-    ):
-        raise KeyError(
-            f"One or multiple configuration variables aren't set \n"
-            f"Configuration variables : {remote_database_variables}"
-        )
-
-    return remote_database_variables
+    return mtm_vars
 
 
-def set_database_connection(vars=None):
+def set_database_connection(db_name):
     try:
+        env = os.environ
         connection = sqlalchemy.create_engine(
-            f"postgresql://{vars['POSTGRES_USER']}:{vars['POSTGRES_PASSWORD']}"
-            f"@{vars['POSTGRES_HOST']}:{vars['POSTGRES_PORT']}"
-            f"/{vars['db_name']}"
+            f"postgresql://{env['POSTGRES_USER']}:{env['POSTGRES_PASSWORD']}"
+            f"@{env['POSTGRES_HOST']}:{env['POSTGRES_PORT']}"
+            f"/{db_name}"
         )
         connection.connect()
     except Exception:
         raise ValueError(
             f"The Postgres database was wrongly configured."
-            f"Available variables are {vars}."
+            f"Available variables are {env}."
         )
 
     return connection
+
+
+def check_mtm_vars(mtm_vars):
+    mtm_vars = update_dates(mtm_vars)
+
+    if mtm_vars['start_date'] > mtm_vars['end_date']:
+        raise DatabaseAlreadyUpdatedError(
+            f"""
+                Dates aren't set correctly:
+                start_date={mtm_vars['start_date']},
+                end_date={mtm_vars['end_date']}
+            """
+        )
+
+    if (
+        '' in mtm_vars.values() or not
+        mtm_vars.values()
+    ):
+        raise KeyError(
+            f"One or multiple configuration variables aren't set \n"
+            f"Configuration variables : {mtm_vars}"
+        )
+
+    return mtm_vars
+
+
+def update_dates(mtm_vars):
+    mtm_vars['start_date'] = (
+        update_start_date_regarding_database_state(mtm_vars)
+    )
+    mtm_vars['end_date'] = (
+        update_end_date_regarding_database_state(mtm_vars)
+    )
+
+    return mtm_vars
+
+
+def is_database_created(table_name='visits'):
+    try:
+        return bool(connection.execute(f"select * from {table_name}"))
+    except Exception:
+        return False
+
+
+def update_start_date_regarding_database_state(mtm_vars):
+    if is_database_created():
+        last_update = (
+            connection.execute(
+                "select date from visits order by date desc limit 1"
+            ).fetchall()[0][0]
+        ).date()
+        return last_update + timedelta(days=1)
+    return mtm_vars['start_date']
+
+
+def update_end_date_regarding_database_state(mtm_vars):
+    yesterday = date.today() - timedelta(days=1)
+    if mtm_vars['end_date'] <= yesterday:
+        return mtm_vars['end_date']
+    return yesterday
