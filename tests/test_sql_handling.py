@@ -1,4 +1,3 @@
-
 import pytest
 from sqlalchemy import text
 from matomo_pull.sql_handling import (
@@ -6,11 +5,7 @@ from matomo_pull.sql_handling import (
     fill_database
 )
 
-from .utils import (  # noqa
-    settings_setup,
-    settings_init,
-    settings
-)
+from .conftest import settings
 
 
 def test_data_object_corrupted():
@@ -18,7 +13,7 @@ def test_data_object_corrupted():
         convert_data_object_to_sql('dummy_value', {}, 'dummy_table')
 
 
-def test_data_object_is_correct():
+def test_data_object_is_correct(settings_init):
     dummy_table_name = 'dummy_table'
     dummy_object = [{"label": "value"}]
     convert_data_object_to_sql(
@@ -31,7 +26,7 @@ def test_data_object_is_correct():
     assert conn.execute(text(f"select * from {dummy_table_name}"))
 
 
-def test_table_need_transpose():
+def test_table_need_transpose(settings_init):
     dummy_table_name = 'dummy_table'
     dummy_object = [{"label": "value"}]
     dummy_column_name = 'dummy_index'
@@ -53,7 +48,7 @@ def test_table_need_transpose():
     )
 
 
-def test_fill_database():
+def test_fill_database(settings_init):
     data_objects = {
         'table1': [{'label1': 'value1'}],
         'table2': [{'label2': 'value2'}]

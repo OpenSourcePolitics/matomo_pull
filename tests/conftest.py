@@ -3,14 +3,15 @@ import yaml
 import os
 import jwt
 import matomo_pull.settings as settings
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+from sqlalchemy import create_engine
 
-FILE_NAME = 'dummy_config.yml'
+FILE_NAME = 'dummy_config_file.yml'
 DUMMY_JWT_SECRET_KEY = 'dummy_secret'
 config_for_tests = {
     'base_url_parameters': {
         'start_date': datetime.strptime('2021-01-01', '%Y-%m-%d').date(),
-        'end_date': datetime.strptime('2021-01-02', '%Y-%m-%d').date(),
+        'end_date': datetime.strptime('2022-01-02', '%Y-%m-%d').date(),
     },
     'requests': {
         'dummy_table': {
@@ -25,9 +26,13 @@ rdv_for_tests = {
     'base_url': 'https://example.com/',
     'db_name': 'postgres',
     'id_site': '1',
-    'start_date': '2021-01-04',
-    'end_date': '2021-02-04',
-    'token_auth': 'dummy_token'
+    'start_date': '2020-01-04',
+    'end_date': '2030-01-01',
+    'token_auth': 'dummy_token',
+    'POSTGRES_USER': 'postgres',
+    'POSTGRES_PASSWORD': 'postgres',
+    'POSTGRES_HOST': 'localhost',
+    'POSTGRES_PORT': '5432'
 }
 dummy_table_name = list(config_for_tests['requests'].keys())[0]
 dummy_table_parameters = config_for_tests['requests'][dummy_table_name]
@@ -48,7 +53,21 @@ def settings_setup():
 
 @pytest.fixture(scope="function", autouse=True)
 def settings_init():
+    drop_database()
     settings.init(FILE_NAME, rdv_for_tests)
+
+    yield
+
+
+def drop_database():
+    vars = rdv_for_tests
+    connection = create_engine(
+        f"postgresql://{vars['POSTGRES_USER']}:{vars['POSTGRES_PASSWORD']}"
+        f"@{vars['POSTGRES_HOST']}:{vars['POSTGRES_PORT']}"
+        f"/{vars['db_name']}"
+    )
+    for table_name in connection.table_names():
+        connection.execute(f"drop table if exists {table_name};")
 
 
 class DummyResponse:
@@ -96,6 +115,10 @@ def dummy_wrong_http_get(method, url):
         pass
 
     return DummyResponse()
+
+
+def dummy_date(mtm_vars):
+    return date.today()
 
 
 @pytest.fixture

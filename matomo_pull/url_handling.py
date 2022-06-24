@@ -12,8 +12,10 @@ def set_url(report_type, request_args={}):
     url_args.update(url_parameters)
     url_args.update(request_args)
     if not s.config['requests'][report_type].get('date_range'):
-        start_date = s.remote_database_variables['start_date']
-        end_date = s.remote_database_variables.get('end_date') or \
+        start_date = s.mtm_vars['start_date']
+        if url_parameters.get('period') == 'range':
+            start_date = s.raw_start_date
+        end_date = s.mtm_vars.get('end_date') or \
             date.today().strftime("%Y-%m-%d")
         url_args['date'] = f"{start_date},{end_date}"
 
@@ -25,9 +27,9 @@ def set_url(report_type, request_args={}):
 
 def set_basic_url_with_env_variables():
     url = (
-        f"{s.remote_database_variables['base_url']}index.php?"
-        f"&token_auth={s.remote_database_variables['token_auth']}"
-        f"&idSite={s.remote_database_variables['id_site']}"
+        f"{s.mtm_vars['base_url']}index.php?"
+        f"&token_auth={s.mtm_vars['token_auth']}"
+        f"&idSite={s.mtm_vars['id_site']}"
     )
 
     return url

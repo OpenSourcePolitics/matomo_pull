@@ -1,9 +1,7 @@
 import pytest
 import matomo_pull.data_handling as dh
 
-from .utils import (  # noqa
-    settings_setup,
-    settings_init,
+from .conftest import (
     settings,
     dummy_correct_http_get,
     dummy_correct_http_get_subtabled,
@@ -19,7 +17,8 @@ def test_set_data_object_from_url_wrong_parameters():
 
 
 def test_set_data_object_from_url_with_date_range(monkeypatch):
-    rdv_for_tests.update(
+    mtm_vars = rdv_for_tests.copy()
+    mtm_vars.update(
         {
             'start_date': '2021-01-01',
             'end_date': '2021-01-30'
@@ -27,8 +26,8 @@ def test_set_data_object_from_url_with_date_range(monkeypatch):
     )
     monkeypatch.setattr(
         settings,
-        'remote_database_variables',
-        rdv_for_tests,
+        'mtm_vars',
+        mtm_vars,
         raising=False
     )
     dummy_table_parameters.update({'date_range': True})
@@ -63,12 +62,13 @@ def test_parse_range_data_has_subtable(monkeypatch):
     monkeypatch.setattr(
         settings.http, 'request', dummy_correct_http_get_subtabled
     )
+    mtm_vars = rdv_for_tests.copy()
 
-    rdv_for_tests['end_date'] = rdv_for_tests['start_date']
+    mtm_vars['end_date'] = mtm_vars['start_date']
     monkeypatch.setattr(
         settings,
-        'remote_database_variables',
-        rdv_for_tests,
+        'mtm_vars',
+        mtm_vars,
         raising=False
     )
 
