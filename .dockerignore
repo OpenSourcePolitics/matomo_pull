@@ -8,3 +8,4 @@ license.txt
 Dockerfile
 Makefile
 *_matomo
+*.sql
