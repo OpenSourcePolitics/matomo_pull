@@ -54,11 +54,11 @@ def test_database_already_up_to_date(settings_setup, monkeypatch):
 def test_database_creation(settings_setup):
     conn = settings.set_database_connection(os.environ['db_name'])
     conn.execute(
-        "create table visits(id int primary key not null, date date);"
+        "create table matomo.visits(id int primary key not null, date date);"
     )
     assert settings.is_database_created()
 
-    conn.execute("drop table visits;")
+    conn.execute("drop table matomo.visits;")
     assert not settings.is_database_created()
 
 
@@ -69,10 +69,10 @@ def test_updating_dates(settings_setup):
     conn = settings.set_database_connection(os.environ['db_name'])
 
     conn.execute(
-        "create table visits(id int primary key not null, date timestamp);"
+        "create table matomo.visits(id int primary key not null, date timestamp);"
     )
     conn.execute(
-        f"insert into visits(id,date) values(1, '{last_update_date}')"
+        f"insert into matomo.visits(id,date) values(1, '{last_update_date}')"
     )
 
     vars = settings.check_mtm_vars(settings.mtm_vars)
