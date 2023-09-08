@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "matomo-pull"
+version = "0.1.0"
+description = ""
+authors = ["THIVEND <baptiste.thivend@protonmail.com>"]
+readme = "README.md"
+packages = [{include = "matomo_pull"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+SQLAlchemy = "1.4.49"
+gunicorn = "^21.2.0"
+PyJWT = "^2.6.0"
+pandas = "^2.1.0"
+psycopg2 = "^2.9.7"
+urllib3 = "^2.0.4"
+
+
+[tool.poetry.group.dev.dependencies]
+python-dotenv = "0.21.0"
+PyYAML = "^6.0.1"
+Flask = "^2.3.3"
+pre-commit = "^3.4.0"
+ggshield = "^1.18.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -7,7 +7,7 @@ The aim of the script provided is to pull data from a [Matomo](matomo.org) insta
 ## Getting started
 ### Requirements
 - Python >= 3.8
-- pip >= 21.x.x
+- [Poetry](https://python-poetry.org/)
 - **Strongly recommended** : a virtual environment manager (the one used for this project is [pew](https://github.com/berdario/pew)).
 - An admin access to your Matomo instance to retrieve the API key
 - A Postgres instance(either your local machine, or a remote installation)
@@ -27,8 +27,8 @@ The aim of the script provided is to pull data from a [Matomo](matomo.org) insta
     - `end_date` (optional) : same format as start date. When set, the database will only contain data within the date range given.
 
 
-3. Run the following comand : `pip install -r requirements.txt` to install relevant packages
-4. Run the following command to obtain your data : `python -c "import main; import os; os.environ['JWT_SECRET_KEY']='anonymous'; main.exec()"`
+3. Run the following comand : `poetry install` to install relevant packages
+4. Run the following command to obtain your data : `python -c "import main; main.exec()"`
 5. Gather the database file/ database informations created and use it for your data analysis
 
 ## Improve/contribute
@@ -45,5 +45,5 @@ TL;DR:
 - [x] Add `requirements.txt`
 - [x] Add minimal tests
 - [x] Env variables for critical parameters
-- [ ] Adapt to obtain a postgres-data format
+- [x] Adapt to obtain a postgres-data format
 - [ ] Update README for container-use
