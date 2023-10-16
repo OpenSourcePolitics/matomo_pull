@@ -35,6 +35,7 @@ def convert_data_object_to_sql(table_name, table_params, data_object):
         df.to_sql(
             table_name,
             s.connection,
-            if_exists='append'
+            if_exists='append',
+            schema='matomo'
         )
         print(table_name)

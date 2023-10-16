@@ -116,7 +116,7 @@ def update_dates(mtm_vars):
     return mtm_vars
 
 
-def is_database_created(table_name='visits'):
+def is_database_created(table_name='matomo.visits'):
     try:
         return bool(connection.execute(f"select * from {table_name}"))
     except Exception:
@@ -127,7 +127,7 @@ def update_start_date_regarding_database_state(mtm_vars):
     if is_database_created():
         last_update = (
             connection.execute(
-                "select date from visits order by date desc limit 1"
+                "select date from matomo.visits order by date desc limit 1"
             ).fetchall()[0][0]
         ).date()
         return last_update + timedelta(days=1)
